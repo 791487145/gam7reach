@@ -11,4 +11,5 @@ use App\Http\Controllers\Apiresponse\ApiResponses;
 class BaiscController extends Controller
 {
    use ApiResponses;
+   const LIMIT=10;//每页条数
 }

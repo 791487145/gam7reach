@@ -32,6 +32,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  */
 class 7rGood extends Eloquent
 {
+
 	protected $primaryKey = 'goods_id';
 	public $timestamps = false;
 
