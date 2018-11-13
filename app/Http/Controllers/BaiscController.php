@@ -11,4 +11,6 @@ use App\Http\Controllers\Apiresponse\ApiResponses;
 class BaiscController extends Controller
 {
    use ApiResponses;
+
+
 }
