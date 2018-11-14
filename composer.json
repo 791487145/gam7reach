@@ -11,6 +11,7 @@
         "caffeinated/modules": "v4.3",
         "fideloper/proxy": "^4.0",
         "jormin/laravel-ddoc": "^1.1",
+        "kalnoy/nestedset": "^4.3",
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",
         "lubusin/laravel-decomposer": "^1.2",

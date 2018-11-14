@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Tue, 13 Nov 2018 03:00:27 +0000.
+ * Date: Wed, 14 Nov 2018 01:24:08 +0000.
  */
 
 namespace App\Models;
@@ -32,7 +32,6 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  */
 class 7rGood extends Eloquent
 {
-
 	protected $primaryKey = 'goods_id';
 	public $timestamps = false;
 

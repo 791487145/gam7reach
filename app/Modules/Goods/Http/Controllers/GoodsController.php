@@ -23,15 +23,25 @@ class GoodsController extends BaiscController
         return $this->success($goods_list);
     }
     /*
+     * 商品类目
+     */
+    public function goodsClass(){
+
+    }
+    /*
      * 添加商品
      */
     public function goodsAdd(Request $request){
         $message=array(
             'goods_name.required'=>'商品名称不能为空',
+            'gc_id.required'=>'商品类目不能为空',
+            'goods_price.required'=>'商品价格不能为空',
+
         );
         $validator = Validator::make($request->all(), [
-            'goods_name' => 'required',
+            'goods_name' => 'required|',
             'gc_id'=>'required',
+            'goods_price'=>'required'
         ]);
         var_dump($validator->attributes());
         if ($validator->fails()) {

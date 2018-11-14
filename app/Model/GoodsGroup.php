@@ -26,6 +26,7 @@ class GoodsGroup extends Eloquent
 	protected $primaryKey = 'goods_group_id';
     public $timestamps = true;
     protected $dateFormat = 'U';
+    protected $company_id=1;
 	protected $casts = [
 		'company_id' => 'int',
 		'created_at' => 'int',
