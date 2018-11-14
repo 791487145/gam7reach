@@ -21,3 +21,11 @@ $factory->define(App\User::class, function (Faker $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\Model\Employ::class, function (Faker $faker) {
+    return [
+        'mobile' => mt_rand(2000, 9000),
+        'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+        'role_id' => 1
+    ];
+});
