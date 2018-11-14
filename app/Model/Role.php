@@ -30,6 +30,8 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Role whereRoleName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Role whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $deccripe 描述
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Role whereDeccripe($value)
  */
 class Role extends Eloquent
 {
@@ -50,4 +52,5 @@ class Role extends Eloquent
 		'company_id',
 		'preinstall_role'
 	];
+
 }

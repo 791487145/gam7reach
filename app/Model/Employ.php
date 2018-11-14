@@ -47,6 +47,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Employ whereWorkNo($value)
  * @mixin \Eloquent
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read \App\Model\Role $role
  */
 class Employ extends Authenticatable implements JWTSubject
 {
@@ -93,6 +94,11 @@ class Employ extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return array('company_id' => $this->getCompany());
+    }
+
+    public function role()
+    {
+        return $this->hasOne(Role::class,'id','role_id');
     }
 
 }

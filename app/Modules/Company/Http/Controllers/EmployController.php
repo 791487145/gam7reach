@@ -3,29 +3,36 @@
 namespace App\Modules\Company\Http\Controllers;
 
 use App\Http\Controllers\BaiscController;
+use App\Model\Department;
 use App\Model\Employ;
 use App\Model\Menus;
+use App\Model\Store;
+use App\Model\RegisionManager;
 use App\Model\Role;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
-class RoleController extends BaiscController
+class EmployController extends BaiscController
 {
+    protected $preinstall_role;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $role = auth('employ')->user()->role()->first();
+        $this->preinstall_role = $role->preinstall_role;
+    }
+
     /**
      * 角色列表
      * @param Request $request
      * @return mixed
      */
-    public function roleList(Request $request)
+    public function employsList(Request $request)
     {
-        $menus = Menus::defaultOrder()->get()->toTree();
-
-        $roles = Role::whereCompanyId($this->company_id)->select('id','role_name','descripe')
-                 ->forPage($request->post('page',1),$request->post('limit',$this->limit))->get();
-        foreach ($roles as $role)
-        {
-            $role->employ_num = Employ::whereCompanyId($this->company_id)->whereRoleId($role->id)->count();
-        }
+        $departments = Department::whereCompanyId($this->company_id)->select('id','dep_name')->get();
+        $roles = Role::whereCompanyId($this->company_id)->select('id','role_name')->forPage($request->post('page',1),$request->post('limit',$this->limit))->get();
+        $stores = Store::whereCompanyId($this->company_id)->select('store_id','store_name')->get();
 
         $data = array(
             'count' => count($roles),
