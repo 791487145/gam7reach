@@ -13,8 +13,8 @@ use Route;
 class BaiscController extends BascController
 {
 
+    const LIMIT=10;//每页条数
     public $company_id;
-
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
@@ -24,5 +24,6 @@ class BaiscController extends BascController
             return $next($request);
         });
     }
+
 
 }
