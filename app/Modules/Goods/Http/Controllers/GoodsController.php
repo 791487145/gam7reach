@@ -20,7 +20,7 @@ class GoodsController extends BaiscController
      * 总商品池
      */
     public function goodsList(Request $request,Goods $goods){
-        $goods_list=$goods->getList($request,$this->getCompanyId());
+        $goods_list=$goods->getList($request,$this->company_id);
         return $this->success($goods_list);
     }
     /*
@@ -33,25 +33,59 @@ class GoodsController extends BaiscController
     /*
      * 添加商品
      */
-    public function goodsAdd(Request $request){
+    public function goodsAdd(Request $request,Goods $goods){
         $message=array(
             'goods_name.required'=>'商品名称不能为空',
             'gc_id.required'=>'商品类目不能为空',
             'goods_price.required'=>'商品价格不能为空',
+            'goods_images.required'=>'商品图片不能为空',
+            'goods_price.numeric'=>'商品价格必须是数字',
 
         );
         $validator = Validator::make($request->all(), [
-            'goods_name' => 'required|',
+            'goods_name' => 'required',
             'gc_id'=>'required',
-            'goods_price'=>'required'
-        ]);
+            'goods_price'=>'required|numeric',
+            'goods_images'=>'required'
+        ],$message);
         if ($validator->fails()) {
            return $this->failed($validator->errors());
         }
-
+        $date=$request->all();
+        $date['company_id']=$this->company_id;
+        $goods->addGoods($date);
+        return $this->message('添加商品成功');
+    }
+    /*
+     * 旗舰店添加商品
+     */
+    public function addShopGoods(){
 
     }
+    /*
+     * 云店添加商品
+     */
+    public function addStoreGoods(){
 
+    }
+    /*
+     * 编辑商品
+     */
+    public function editGoods(){
+
+    }
+    /*
+     * 编辑旗舰店商品
+     */
+    public function editShopGoods(){
+
+    }
+    /*
+     * 编辑云店商品
+     */
+    public function editStoreGoods(){
+
+    }
     /*
      * 批量操作
      */

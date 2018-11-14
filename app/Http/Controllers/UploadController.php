@@ -15,7 +15,6 @@ class UploadController extends BaiscController
             return response()->json(['pic'=>$pic]);
         }
     }
-
     public function fileDelete(Request $request)
     {
         $file = $request->post('file');

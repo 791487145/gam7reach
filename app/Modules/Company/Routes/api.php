@@ -21,6 +21,8 @@ Route::prefix('company')->group(function () {
 
     Route::post('login', 'LoginController@companyLogin');
 
+    Route::post('roles', 'RoleController@roleShow')->name('roleShow');
+
     Route::post('menus', 'MenuController@menuShow')->name('menuShow');
     Route::post('menus/create', 'MenuController@menuCreate')->name('menuCreate');
     Route::post('menus/update', 'MenuController@menuUpdate')->name('menuUpdate');

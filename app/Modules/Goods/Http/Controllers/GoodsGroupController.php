@@ -21,7 +21,7 @@ class GoodsGroupController extends BaiscController
      * 商品分组
      */
    public function list(GoodsGroup $goodsGroup){
-        $goodsGroup=$goodsGroup->where('company_id',$this->getCompanyId())->get();
+        $goodsGroup=$goodsGroup->where('company_id',$this->company_id)->get();
         return $this->success($goodsGroup);
    }
    /*
@@ -36,12 +36,12 @@ class GoodsGroupController extends BaiscController
            'goods_group_name' => [
                'required',
                Rule::unique('7r_goods_group')->where(function ($query) {
-                   $query->where('company_id', $this->getCompanyId());
+                   $query->where('company_id', $this->company_id);
                })
                ],
        ],$message);
        $date=$request->all();
-       $date['company_id']=$this->getCompanyId();
+       $date['company_id']=$this->company_id;
        if ($validator->fails()) {
            return $this->failed($validator->errors());
        }

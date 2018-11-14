@@ -25,7 +25,8 @@ Route::prefix('/goods')->group(function(){
     //添加商品
     Route::post('add','GoodsController@goodsAdd')->name('goodsAdd');
     //编辑商品
-
+    //添加旗舰店商品
+    Route::post('add/shop','GoodsController@addShopGoods')->name('addShopGoods');
     //批量操作
     Route::post('batch','GoodsController@batch')->name('goods');
 });

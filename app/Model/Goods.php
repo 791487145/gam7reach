@@ -82,6 +82,12 @@ class Goods extends Eloquent
         return $this->hasOne(GoodsGroup::class,'goods_group_id','goods_group_id');
     }
     /*
+     * 商品图片
+     */
+    public function goods_images(){
+        return $this->hasMany(GoodsImage::class,'goods_id','goods_id');
+    }
+    /*
      * 获取商品池列表
      */
     public function getList($request,$company_id){
@@ -104,5 +110,28 @@ class Goods extends Eloquent
         }
         return $this->with('goods_group')->where($where)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get();
     }
+    /*
+     * 添加商品
+     */
+    public function addGoods($date){
+        //获取企业默认相册
+        $albumClass=AlbumClass::where(['company_id'=>$date['company_id'],'is_default'=>1])->first();
+        if($date['goods_images']){//处理商品图片
+            $goods_images=explode(',',$date['goods_images']);
+            $date['goods_image']=$goods_images[0];
+            unset($date['goods_images']);
+            DB::transaction(function () use($goods_images,$date,$albumClass){//开启事务
+                $goods=Goods::create($date);
+                foreach ($goods_images as $image){//插入企业相册图片
+                    AlbumPic::create(['apic_name'=>$image,'aclass_id'=>$albumClass->aclass_id,
+                        'apic_cover'=>$image,'upload_time'=>time()]);
+                    //插入商品图片表
+                    GoodsImage::create(['goods_id'=>$goods->goods_id,'company_id'=>$date['company_id'],
+                        'goods_image'=>$image]);
+                }
 
+            });
+
+        }
+    }
 }
