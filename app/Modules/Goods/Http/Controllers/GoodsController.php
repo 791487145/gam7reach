@@ -26,7 +26,9 @@ class GoodsController extends BaiscController
      * 添加商品
      */
     public function goodsAdd(Request $request){
-
+        $message=array(
+            'goods_name.required'=>'商品名称不能为空',
+        );
         $validator = Validator::make($request->all(), [
             'goods_name' => 'required',
             'gc_id'=>'required',

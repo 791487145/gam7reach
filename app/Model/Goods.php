@@ -8,6 +8,7 @@
 namespace App\Model;
 
 use App\Http\Controllers\BaiscController;
+use App\Models\GoodsClass;
 use Reliese\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Facades\DB;
 /**
@@ -68,6 +69,12 @@ class Goods extends Eloquent
 		'goods_edittime',
 		'goods_body'
 	];
+	/*
+	 * 商品分类
+	 */
+	public function goods_class(){
+	    return $this->hasOne(GoodsClass::class,"gc_id","gc_id");
+    }
 	/*
 	 * 商品分组
 	 */
