@@ -41,7 +41,6 @@ class Goods extends Eloquent
     protected $dateFormat = 'U';
     const CREATED_AT = 'goods_addtime';
     const UPDATED_AT = 'goods_edittime';
-    protected $company_id=1;
 
 	protected $casts = [
 		'goods_group_id' => 'int',
@@ -85,8 +84,8 @@ class Goods extends Eloquent
     /*
      * 获取商品池列表
      */
-    public function getList($request){
-        $where['company_id']=$this->company_id;
+    public function getList($request,$company_id){
+        $where['company_id']=$company_id;
         $goods_state=$request->input('goods_state');
         if($request->input('goods_name')){//商品名筛选
             $where['goods_name']=$request->input('goods_name');

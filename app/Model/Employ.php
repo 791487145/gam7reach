@@ -91,7 +91,8 @@ class Employ extends Authenticatable implements JWTSubject
 
     public function getJWTCustomClaims()
     {
-        return array(['company_id' => $this->getCompany()]);
+        
+        return array('company_id' => $this->getCompany());
     }
 
 }

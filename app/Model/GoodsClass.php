@@ -7,6 +7,7 @@
 
 namespace App\Models;
 
+use Kalnoy\Nestedset\NodeTrait;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
@@ -22,18 +23,19 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  */
 class GoodsClass extends Eloquent
 {
+    use NodeTrait;
 	protected $table = '7r_goods_class';
 	protected $primaryKey = 'gc_id';
 	public $timestamps = false;
 
 	protected $casts = [
-		'gc_parent_id' => 'int',
-		'gc_sort' => 'bool',
+		'parent_id' => 'int',
 	];
 
 	protected $fillable = [
 		'gc_name',
-		'gc_parent_id',
-		'gc_sort',
+		'parent_id',
+        '_lft',
+        '_rgt',
 	];
 }

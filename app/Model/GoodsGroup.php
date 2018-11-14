@@ -14,7 +14,6 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * 
  * @property int $goods_group_id
  * @property string $goods_group_name
- * @property int $company_id
  * @property int $created_at
  * @property int $updated_at
  *
@@ -26,7 +25,6 @@ class GoodsGroup extends Eloquent
 	protected $primaryKey = 'goods_group_id';
     public $timestamps = true;
     protected $dateFormat = 'U';
-    protected $company_id=1;
 	protected $casts = [
 		'company_id' => 'int',
 		'created_at' => 'int',

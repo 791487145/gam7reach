@@ -8,6 +8,7 @@
 namespace App\Modules\Goods\Http\Controllers;
 use App\Http\Controllers\BaiscController;
 use App\Model\Goods;
+use App\Models\GoodsClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,14 +20,15 @@ class GoodsController extends BaiscController
      * 总商品池
      */
     public function goodsList(Request $request,Goods $goods){
-        $goods_list=$goods->getList($request);
+        $goods_list=$goods->getList($request,$this->getCompanyId());
         return $this->success($goods_list);
     }
     /*
      * 商品类目
      */
     public function goodsClass(){
-
+      $tree=GoodsClass::all()->toTree();
+      return $this->success($tree);
     }
     /*
      * 添加商品
@@ -43,12 +45,13 @@ class GoodsController extends BaiscController
             'gc_id'=>'required',
             'goods_price'=>'required'
         ]);
-        var_dump($validator->attributes());
         if ($validator->fails()) {
            return $this->failed($validator->errors());
         }
 
+
     }
+
     /*
      * 批量操作
      */
