@@ -11,7 +11,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rAlbumClass
- * 
+ *
  * @property int $aclass_id
  * @property string $aclass_name
  * @property int $store_id
@@ -23,8 +23,19 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property int $upload_time
  * @property bool $is_default
  * @property int $company_id
- *
  * @package App\Models
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass whereAclassCover($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass whereAclassDes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass whereAclassId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass whereAclassName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass whereAclassSort($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass whereIsDefault($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass whereUploadTime($value)
+ * @mixin \Eloquent
  */
 class AlbumClass extends Eloquent
 {

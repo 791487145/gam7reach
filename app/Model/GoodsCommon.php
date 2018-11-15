@@ -11,13 +11,20 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rGoodsCommon
- * 
+ *
  * @property int $goods_commonid
  * @property int $goods_id
  * @property int $spec_id
  * @property string $spec_name
- *
  * @package App\Models
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsCommon newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsCommon newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsCommon query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsCommon whereGoodsCommonid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsCommon whereGoodsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsCommon whereSpecId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsCommon whereSpecName($value)
+ * @mixin \Eloquent
  */
 class GoodsCommon extends Eloquent
 {

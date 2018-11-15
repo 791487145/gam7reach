@@ -11,7 +11,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rCompany
- * 
+ *
  * @property int $id
  * @property string $name
  * @property int $category_id
@@ -33,8 +33,32 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property int $store_price_switch
  * @property int $order_overtime
  * @property int $auto_delivery
- *
  * @package App\Models
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereAreaInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereAutoDelivery($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereBalance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereCloseInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereCompanyAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereLogo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereMainCertification($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereModuleInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereOrderOvertime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereSeo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereShowStoreWebIm($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereSmsNum($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereStoreDecorationSwitch($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereStorePriceSwitch($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereTelphone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Company whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Company extends Eloquent
 {
