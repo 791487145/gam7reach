@@ -120,7 +120,6 @@ class CompanyController extends BaiscController
     public function employUpdate(Request $request)
     {
         $employ = Employ::whereId($request->post('role_id'))->first();
-
         $param = array(
             'name' => $request->post('name'),
             'mobile' => $request->post('mobile',''),
