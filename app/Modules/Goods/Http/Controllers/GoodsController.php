@@ -8,9 +8,13 @@
 namespace App\Modules\Goods\Http\Controllers;
 use App\Http\Controllers\BaiscController;
 use App\Model\Goods;
+use App\Model\ShopGood;
+use App\Model\StoreGood;
+use App\Model\WebShop;
 use App\Models\GoodsClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class GoodsController extends BaiscController
 {
@@ -21,6 +25,37 @@ class GoodsController extends BaiscController
      */
     public function goodsList(Request $request,Goods $goods){
         $goods_list=$goods->getList($request,$this->company_id);
+        return $this->success($goods_list);
+    }
+    /*
+     * 只查询上架的商品
+     */
+    public function onlineGoods(Request $request){
+        $list=Goods::upShelves()->where('company_id',$this->company_id)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get()->toArray();
+        $goods_list=array();
+        foreach ($list as  $key=>$goods){
+            $goods_list[$key]=$goods;
+            $goods_list[$key]['goods_state']=$goods['goods_state']?'上架':'下架';
+            $goods_list[$key]['goods_addtime']=date('Y-m-d H:i:s',$goods['goods_addtime']);
+            $goods_list[$key]['goods_edittime']=date('Y-m-d H:i:s',$goods['goods_edittime']);
+        }
+        return $this->success($goods_list);
+    }
+    /*
+     * 旗舰店商品池
+     */
+    public function shopGoodsList(Request $request,ShopGood $shopGood){
+        $goods_list=$shopGood->getList($request,$this->company_id);
+        return $this->success($goods_list);
+    }
+    /*
+     * 云店商品池
+     */
+    public function storeGoodsList(Request $request,StoreGood $storeGood){
+        if(empty($request->input('store_id'))){
+            return $this->failed('云店id为空');
+        }
+        $goods_list=$storeGood->getList($request,$this->company_id);
         return $this->success($goods_list);
     }
     /*
@@ -46,10 +81,11 @@ class GoodsController extends BaiscController
             'goods_name' => 'required',
             'gc_id'=>'required',
             'goods_price'=>'required|numeric',
-            'goods_images'=>'required'
+            'goods_images'=>'required',
+
         ],$message);
         if ($validator->fails()) {
-           return $this->failed($validator->errors());
+           return $this->failed($validator->errors()->first());
         }
         $date=$request->all();
         $date['company_id']=$this->company_id;
@@ -59,32 +95,205 @@ class GoodsController extends BaiscController
     /*
      * 旗舰店添加商品
      */
-    public function addShopGoods(){
-
+    public function addShopGoods(Request $request,ShopGood $shopGood){
+        $message=array(
+            'goods_id.required'=>'商品id不能为空',
+            'goods_id.unique'=>'已添加过此商品',
+            'goods_shop_price.required'=>'旗舰店售价不能为空',
+            'goods_storage.required'=>'商品库存不能为空',
+            'goods_storage.numeric'=>'库存必须为数字',
+            'is_points.required'=>'积分抵扣不能为空',
+        );
+        $validator = Validator::make($request->all(), [
+            'goods_id' => ['required',
+                Rule::unique('7r_shop_goods')->where(function ($query) {
+                    $query->where('company_id', $this->company_id);
+                })
+                ],
+            'goods_shop_price'=>'required',
+            'goods_storage'=>'required|numeric',
+            'is_points'=>'required'
+        ],$message);
+        if ($validator->fails()) {
+            return $this->failed($validator->errors()->first());
+        }
+        $date=$request->all();
+        $date['company_id']=$this->company_id;
+        $webshop=WebShop::where('company_id',$this->company_id)->first();
+        if(empty($webshop)){
+            return $this->failed('旗舰店信息错误');
+        }
+        $date['shop_id']=$webshop->shop_id;
+        $shopGood->add($date);
+        return $this->message('添加商品成功');
     }
     /*
      * 云店添加商品
      */
-    public function addStoreGoods(){
+    public function addStoreGoods(Request $request,StoreGood $storeGood){
+        $message=array(
+            'goods_id.required'=>'商品id不能为空',
+            'goods_id.unique'=>'已添加过此商品',
+            'goods_store_price.required'=>'云店售价不能为空',
+            'goods_storage.required'=>'商品库存不能为空',
+            'goods_storage.numeric'=>'库存必须为数字',
+            'is_points.required'=>'积分抵扣不能为空',
+            'store_id.required'=>'请指定所属门店'
+        );
+        $validator = Validator::make($request->all(), [
+            'goods_id' => ['required',
+                Rule::unique('7r_store_goods')->where(function ($query) use($request){
+                    $query->where(['company_id'=>$this->company_id,'store_id'=>$request->input('store_id')]);
+                })
+            ],
+            'goods_store_price'=>'required',
+            'goods_storage'=>'required|numeric',
+            'is_points'=>'required',
+            'store_id'=>'required'
+        ],$message);
+        if ($validator->fails()) {
+            return $this->failed($validator->errors()->first());
+        }
+        $date=$request->all();
+        $date['company_id']=$this->company_id;
+        $storeGood->add($date);
+        return $this->message('添加商品成功');
 
     }
     /*
      * 编辑商品
      */
-    public function editGoods(){
+    public function editGoods(Request $request,Goods $goods){
+        if($request->isMethod("post")){//更新商品
+            $message=array(
+                'goods_id'=>'商品id不能为空',
+                'goods_name.required'=>'商品名称不能为空',
+                'gc_id.required'=>'商品类目不能为空',
+                'goods_price.required'=>'商品价格不能为空',
+                'goods_images.required'=>'商品图片不能为空',
+                'goods_price.numeric'=>'商品价格必须是数字',
+
+            );
+            $validator = Validator::make($request->all(), [
+                'goods_id'=>'required',
+                'goods_name' => 'required',
+                'gc_id'=>'required',
+                'goods_price'=>'required|numeric',
+                'goods_images'=>'required'
+            ],$message);
+            if ($validator->fails()) {
+                return $this->failed($validator->errors()->first());
+            }
+            $date=$request->all();
+            $date['company_id']=$this->company_id;
+            $goods->edit($date);
+            return $this->message('编辑商品成功');
+
+        }
+        $goods_id=$request->input('goods_id');
+        $goods=$goods->with(['goods_class','goods_group','goods_images'])->find($goods_id);
+        if($goods){
+            return $this->success($goods);
+        }
+        return $this->failed('无此商品');
 
     }
     /*
      * 编辑旗舰店商品
      */
-    public function editShopGoods(){
-
+    public function editShopGoods(Request $request,ShopGood $shopGood){
+        if($request->isMethod("post")) {//更新商品
+            $message=array(
+                'shop_goods_id'=>'旗舰店商品id不能为空',
+                'goods_shop_price.required'=>'旗舰店价格不能为空',
+                'goods_shop_price.numeric'=>'商品价格必须是数字',
+                'goods_storage.required'=>'商品库存不能为空',
+                'goods_storage.numeric'=>'库存必须为数字',
+                'is_points.required'=>'积分抵扣不能为空',
+                'goods_state.required'=>'商品状态不能为空',
+            );
+            $validator = Validator::make($request->all(), [
+                'shop_goods_id'=>'required',
+                'goods_shop_price'=>'required|numeric',
+                'goods_storage'=>'required|numeric',
+                'is_points'=>'required',
+                'goods_state'=>'required',
+            ],$message);
+            if ($validator->fails()) {
+                return $this->failed($validator->errors()->first());
+            }
+            $date=$request->all();
+            $date['company_id']=$this->company_id;
+            $shopGood->edit($date);
+            return $this->message('修改商品成功');
+        }
+        $shop_goods_id=$request->input('shop_goods_id');
+        $goods=$shopGood->with('goods')->find($shop_goods_id);
+        if($goods){
+            return $this->success($goods);
+        }
+        return $this->failed('无此商品');
     }
     /*
      * 编辑云店商品
      */
-    public function editStoreGoods(){
-
+    public function editStoreGoods(Request $request,StoreGood $storeGood){
+        if($request->isMethod('post')){
+            $message=array(
+                'store_goods_id'=>'云店商品id不能为空',
+                'goods_store_price.required'=>'云店价格不能为空',
+                'goods_store_price.numeric'=>'商品价格必须是数字',
+                'goods_storage.required'=>'商品库存不能为空',
+                'goods_storage.numeric'=>'库存必须为数字',
+                'is_points.required'=>'积分抵扣不能为空',
+                'goods_state.required'=>'商品状态不能为空'
+            );
+            $validator = Validator::make($request->all(), [
+                'store_goods_id'=>'required',
+                'goods_store_price'=>'required|numeric',
+                'goods_storage'=>'required|numeric',
+                'is_points'=>'required',
+                'goods_state'=>'required'
+            ],$message);
+            if ($validator->fails()) {
+                return $this->failed($validator->errors()->first());
+            }
+            $date=$request->all();
+            $date['company_id']=$this->company_id;
+            $storeGood->edit($date);
+            return $this->message('修改商品成功');
+        }
+        $store_goods_id=$request->input('store_goods_id');
+        $goods=$storeGood->with('goods')->find($store_goods_id);
+        if($goods){
+            return $this->success($goods);
+        }
+        return $this->failed('无此商品');
+    }
+    /*
+     * 商品池上下架
+     */
+    public function shelves(Request $request,Goods $goods){
+        $goods_id=$request->input('goods_id');
+        $flag=$request->input('flag',1);
+        if(empty($goods_id)){
+            return $this->failed('商品id为空');
+        }
+        if($flag==1){//上架
+            if($goods->find($goods_id)->update(['goods_state'=>1])){
+                return $this->message('操作成功');
+            }
+        }else{//下架
+            if($goods->find($goods_id)->update(['goods_state'=>0])){
+                //同时将旗舰店、云店商品下架
+                $goods->find($goods_id)->shopGoods->update(['goods_state'=>0]);
+                $goods->find($goods_id)->storeGoods->each(function ($item,$key){
+                    $item->update(['goods_state'=>0]);
+                });
+                return $this->message('操作成功');
+            }
+        }
+        return $this->failed('操作失败');
     }
     /*
      * 批量操作
@@ -118,5 +327,33 @@ class GoodsController extends BaiscController
 
         }
         return $this->failed('商品id为空');
+    }
+    /*
+     * 旗舰店批量操作
+     */
+    public function shopBatch(Request $request,ShopGood $shopGood){
+        $flag = $request->input('flag');
+        $shop_goods_ids=$request->input('shop_goods_id');
+        if(is_array($shop_goods_ids)){
+            if($flag=='delete'){//删除商品
+                $shopGood->destroy($shop_goods_ids);
+                return $this->message('删除成功');
+            }
+        }
+        return $this->failed('商品id不能为空');
+    }
+    /*
+     * 云店批量操作
+     */
+    public function storeBatch(Request $request,StoreGood $storeGood){
+        $flag=$request->input('flag');
+        $store_goods_ids=$request->input('store_goods_id');
+        if(is_array($store_goods_ids)){
+            if($flag=='delete'){//删除商品
+                $storeGood->destroy($store_goods_ids);
+                return $this->message('删除成功');
+            }
+        }
+        return $this->failed('商品id不能为空');
     }
 }

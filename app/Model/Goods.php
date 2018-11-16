@@ -69,9 +69,19 @@ class Goods extends Eloquent
 		'goods_edittime',
 		'goods_body'
 	];
-	/*
-	 * 商品分类
-	 */
+    /**
+     * 限制查询上架的商品
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUpShelves($query)
+    {
+        return $query->where('goods_state',1);
+    }
+
+    /*
+     * 商品分类
+     */
 	public function goods_class(){
 	    return $this->hasOne(GoodsClass::class,"gc_id","gc_id");
     }
@@ -86,6 +96,18 @@ class Goods extends Eloquent
      */
     public function goods_images(){
         return $this->hasMany(GoodsImage::class,'goods_id','goods_id');
+    }
+    /*
+     * 旗舰店商品
+     */
+    public function shopGoods(){
+        return $this->hasOne(ShopGood::class,'goods_id','goods_id');
+    }
+    /*
+     * 云店商品
+     */
+    public function storeGoods(){
+        return $this->hasMany(StoreGood::class,'goods_id','goods_id');
     }
     /*
      * 获取商品池列表
@@ -108,7 +130,16 @@ class Goods extends Eloquent
         if($request->input('gc_id')){//商品分类
             $where['gc_id']=$request->input('gc_id');
         }
-        return $this->with('goods_group')->where($where)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get();
+        $list=$this->where($where)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get()->toArray();
+
+        $goods_list=array();
+        foreach ($list as  $key=>$goods){
+            $goods_list[$key]=$goods;
+            $goods_list[$key]['goods_state']=$goods['goods_state']?'上架':'下架';
+            $goods_list[$key]['goods_addtime']=date('Y-m-d H:i:s',$goods['goods_addtime']);
+            $goods_list[$key]['goods_edittime']=date('Y-m-d H:i:s',$goods['goods_edittime']);
+        }
+        return  $goods_list;
     }
     /*
      * 添加商品
@@ -133,5 +164,31 @@ class Goods extends Eloquent
             });
 
         }
+    }
+    /*
+     * 编辑商品
+     */
+    public function edit($date){
+        //获取企业默认相册
+        $albumClass=AlbumClass::where(['company_id'=>$date['company_id'],'is_default'=>1])->first();
+        if($date['goods_images']){
+            $goods_images=explode(',',$date['goods_images']);
+            $date['goods_image']=$goods_images[0];
+            unset($date['goods_images']);
+            DB::transaction(function() use ($date,$goods_images,$albumClass){
+                //删除原来的商品图片
+                GoodsImage::where('goods_id',$date['goods_id'])->delete();
+                $this->find($date['goods_id'])->update($date);
+                foreach ($goods_images as $image){//插入企业相册图片
+                    AlbumPic::where('apic_name',$image)->delete();
+                    AlbumPic::create(['apic_name'=>$image,'aclass_id'=>$albumClass->aclass_id,
+                        'apic_cover'=>$image,'upload_time'=>time()]);
+                    //插入商品图片表
+                    GoodsImage::create(['goods_id'=>$date['goods_id'],'company_id'=>$date['company_id'],
+                        'goods_image'=>$image]);
+                }
+            });
+        }
+
     }
 }

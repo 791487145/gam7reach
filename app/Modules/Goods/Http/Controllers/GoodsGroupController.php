@@ -43,7 +43,7 @@ class GoodsGroupController extends BaiscController
        $date=$request->all();
        $date['company_id']=$this->company_id;
        if ($validator->fails()) {
-           return $this->failed($validator->errors());
+           return $this->failed($validator->errors()->first());
        }
        ;
        if(GoodsGroup::create($date)){
