@@ -11,13 +11,22 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rGoodsGroup
- * 
+ *
  * @property int $goods_group_id
  * @property string $goods_group_name
  * @property int $created_at
  * @property int $updated_at
- *
  * @package App\Models
+ * @property int $company_id 企业id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsGroup newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsGroup query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsGroup whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsGroup whereGoodsGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsGroup whereGoodsGroupName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsGroup whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class GoodsGroup extends Eloquent
 {

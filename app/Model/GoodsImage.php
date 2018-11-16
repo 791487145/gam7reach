@@ -11,14 +11,23 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rGoodsImage
- * 
+ *
  * @property int $goods_image_id
  * @property int $goods_commonid
  * @property int $company_id
  * @property string $goods_image
  * @property int $goods_image_sort
- *
  * @package App\Models
+ * @property int $goods_id 商品id
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsImage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsImage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsImage query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsImage whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsImage whereGoodsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsImage whereGoodsImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsImage whereGoodsImageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\GoodsImage whereGoodsImageSort($value)
+ * @mixin \Eloquent
  */
 class GoodsImage extends Eloquent
 {

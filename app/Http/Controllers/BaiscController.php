@@ -19,7 +19,7 @@ class BaiscController extends BascController
     public $region = 2;
     public $shoper = 3;
     public $guide = 4;
-    
+
     public function __construct()
     {
         $this->middleware(function ($request, $next) {

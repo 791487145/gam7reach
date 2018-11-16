@@ -13,19 +13,8 @@ use App\Model\Role;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
-class EmployController extends BaiscController
+class CompanyController extends BaiscController
 {
-    protected $preinstall_role;
-    protected $shop_id;
-
-   /* public function __construct()
-    {
-        parent::__construct();
-        $employ = auth('employ')->user();
-        $role = $employ->role()->first();
-        /*$this->preinstall_role = $role->preinstall_role;
-        $this->shop_id = $employ->shop_id;
-    }*/
 
     /**
      * 员工列表
@@ -131,7 +120,6 @@ class EmployController extends BaiscController
     public function employUpdate(Request $request)
     {
         $employ = Employ::whereId($request->post('role_id'))->first();
-
         $param = array(
             'name' => $request->post('name'),
             'mobile' => $request->post('mobile',''),

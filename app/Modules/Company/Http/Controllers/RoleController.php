@@ -21,7 +21,7 @@ class RoleController extends BaiscController
         $menus = Menus::defaultOrder()->get()->toTree();
 
         $roles = Role::whereCompanyId($this->company_id)->select('id','role_name','descripe')
-                 ->forPage($request->post('page',1),$request->post('limit',$this->limit))->get();
+                 ->forPage($request->post('page',1),$request->post('limit',self::LIMIT))->get();
         foreach ($roles as $role)
         {
             $role->employ_num = Employ::whereCompanyId($this->company_id)->whereRoleId($role->id)->count();

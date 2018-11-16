@@ -11,7 +11,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rAlbumPic
- * 
+ *
  * @property int $apic_id
  * @property string $apic_name
  * @property string $apic_tag
@@ -20,8 +20,17 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property int $apic_size
  * @property string $apic_spec
  * @property int $upload_time
- *
  * @package App\Models
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumPic newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumPic newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumPic query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumPic whereAclassId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumPic whereApicCover($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumPic whereApicId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumPic whereApicName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumPic whereApicTag($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumPic whereUploadTime($value)
+ * @mixin \Eloquent
  */
 class AlbumPic extends Eloquent
 {

@@ -8,29 +8,50 @@
 namespace App\Model;
 
 use App\Http\Controllers\BaiscController;
-use App\Models\GoodsClass;
+use App\Model\GoodsClass;
 use Reliese\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Facades\DB;
+
 /**
- * Class 7rGood
- * 
- * @property int $goods_id
- * @property string $goods_spuno
- * @property string $goods_name
- * @property int $goods_group_id
- * @property string $goods_jingle
- * @property int $company_id
- * @property int $gc_id
- * @property float $goods_price
- * @property float $goods_marketprice
- * @property string $goods_serial
- * @property string $goods_image
- * @property int $goods_state
- * @property int $goods_addtime
- * @property int $goods_edittime
- * @property string $goods_body
+ * App\Model\Goods
  *
- * @package App\Models
+ * @property int $goods_id 商品id(SKU)
+ * @property string|null $goods_spuno 商品条码
+ * @property string $goods_name 商品名称
+ * @property int|null $goods_group_id 商品分组id
+ * @property string|null $goods_jingle 商品广告词（卖点）
+ * @property int $company_id 企业id
+ * @property int $gc_id 商品分类id
+ * @property float $goods_price 商品价格
+ * @property float $goods_marketprice 市场价
+ * @property string $goods_serial 商品货号
+ * @property string $goods_image 商品主图
+ * @property int $goods_state 商品状态 0下架，1正常
+ * @property int $goods_addtime 商品添加时间
+ * @property int $goods_edittime 商品编辑时间
+ * @property string|null $goods_body
+ * @property-read \App\Model\GoodsClass $goods_class
+ * @property-read \App\Model\GoodsGroup $goods_group
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Model\GoodsImage[] $goods_images
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGcId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsAddtime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsEdittime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsGroupId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsImage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsJingle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsMarketprice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsSerial($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsSpuno($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsState($value)
+ * @mixin \Eloquent
  */
 class Goods extends Eloquent
 {

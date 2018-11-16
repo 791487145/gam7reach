@@ -54,8 +54,14 @@ class Employ extends Authenticatable implements JWTSubject
     use Notifiable;
 
 	protected $table = '7r_employ';
-
     protected $dateFormat = 'U';
+
+    //sex
+    const SEX_BOY = 1;
+    const SEX_GIRL = 2;
+    //status
+    const STATUS_NORMAL = 1;
+    const STATUS_FORBBIN = 2;
 
 	protected $casts = [
 		'company_id' => 'int',
@@ -99,6 +105,54 @@ class Employ extends Authenticatable implements JWTSubject
     public function role()
     {
         return $this->hasOne(Role::class,'id','role_id');
+    }
+
+    /**
+     * 管理列表
+     * @param $employ
+     * @param $company_id
+     * @param $tem
+     * @return mixed
+     */
+    static function employList($employ,$company_id,$tem)
+    {
+        $employ = $employ->whereCompanyId($company_id);
+
+        if(!empty($tem['department_id'])){
+            $employ = $employ->whereDepartmentId($tem['department_id']);
+        }
+
+        if(!empty($tem['mobile'])){
+            $employ = $employ->whereMobile($tem['mobile']);
+        }
+
+        if(!empty($tem['work_no'])){
+            $employ = $employ->whereWorkNo($tem['work_no']);
+        }
+
+        if(!empty($tem['role_id'])){
+            $employ = $employ->whereRoleId($tem['role_id']);
+        }
+
+        $employs = $employ->forPage($tem['page'],$tem['limit'])->get();
+        $employs = self::employCN($employs);
+        return $employs;
+    }
+
+    /**
+     * 补充
+     * @param $employs
+     * @return mixed
+     */
+    static function employCN($employs)
+    {
+        foreach ($employs as $employ){
+            $employ->department_name = Department::whereId($employ->department_id)->value('dep_name');
+            $employ->sex_name = $employ->sex == self::SEX_BOY ? '男' : '女';
+            $employ->role_name = Role::whereId($employ->role_id)->value('role_name');
+            $employ->status_name = $employ->status == self::STATUS_NORMAL ? '在职' : '离职';
+        }
+        return $employs;
     }
 
 }
