@@ -38,6 +38,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 class Department extends Eloquent
 {
 	protected $table = '7r_department';
+    protected $dateFormat = 'U';
 
 	protected $casts = [
 		'dep_employ_id' => 'int',

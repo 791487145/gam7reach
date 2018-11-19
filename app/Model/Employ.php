@@ -107,6 +107,11 @@ class Employ extends Authenticatable implements JWTSubject
         return $this->hasOne(Role::class,'id','role_id');
     }
 
+    public function department()
+    {
+        return $this->hasOne(Department::class,'id','department_id');
+    }
+
     /**
      * 管理列表
      * @param $employ
@@ -147,10 +152,18 @@ class Employ extends Authenticatable implements JWTSubject
     static function employCN($employs)
     {
         foreach ($employs as $employ){
-            $employ->department_name = Department::whereId($employ->department_id)->value('dep_name');
-            $employ->sex_name = $employ->sex == self::SEX_BOY ? '男' : '女';
-            $employ->role_name = Role::whereId($employ->role_id)->value('role_name');
-            $employ->status_name = $employ->status == self::STATUS_NORMAL ? '在职' : '离职';
+            if(isset($employ->department_id)){
+                $employ->department_name = Department::whereId($employ->department_id)->value('dep_name');
+            }
+            if(isset($employ->sex)){
+                $employ->sex_name = $employ->sex == self::SEX_BOY ? '男' : '女';
+            }
+            if(isset($employ->role_id)){
+                $employ->role_name = Role::whereId($employ->role_id)->value('role_name');
+            }
+            if(isset($employ->status)){
+                $employ->status_name = $employ->status == self::STATUS_NORMAL ? '在职' : '离职';
+            }
         }
         return $employs;
     }

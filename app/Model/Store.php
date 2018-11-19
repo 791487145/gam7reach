@@ -81,6 +81,10 @@ class Store extends Eloquent
 {
 	protected $table = '7r_store';
 	protected $primaryKey = 'store_id';
+	protected $dateFormat = 'U';
+	//store_state
+	const STORE_STATE_OPEN = 1;
+	const STORE_STATE_CLOSE = 0;
 
 	protected $casts = [
 		'company_id' => 'int',
@@ -124,4 +128,18 @@ class Store extends Eloquent
 		'store_manager_id',
 		'qr_code'
 	];
+
+    /**
+     * 状态值
+     * @param $status
+     * @return mixed
+     */
+	static function stateCN($status)
+    {
+        $param = array(
+            self::STORE_STATE_CLOSE => '关闭',
+            self::STORE_STATE_OPEN => '开店'
+        );
+        return $param[$status];
+    }
 }
