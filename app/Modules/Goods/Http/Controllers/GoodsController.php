@@ -11,7 +11,7 @@ use App\Model\Goods;
 use App\Model\ShopGood;
 use App\Model\StoreGood;
 use App\Model\WebShop;
-use App\Models\GoodsClass;
+use App\Model\GoodsClass;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
