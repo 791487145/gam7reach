@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 Route::prefix('/member')->group(function(){
+    //会员等级分组
     Route::prefix('grade')->group(function(){
         //会员等级
         Route::post('list','MemberGradeController@list')->name('memberGrade');
@@ -34,4 +35,10 @@ Route::prefix('/member')->group(function(){
     Route::match(['get','post'],'edit','MemberController@edit')->name('memberEdit');
     //会员批量操作
     Route::post('batch','MemberController@batch')->name('memberBatch');
+    //会员忠诚度分组
+    Route::prefix('loyalty')->group(function(){
+        //会员中心装修设置
+        Route::match(['get','post'],'decoration','LoyaltyController@decoration')->name('memberDecoration');
+    });
+
 });

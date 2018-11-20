@@ -126,4 +126,5 @@ class MemberController extends BaiscController{
         }
         return $this->failed('会员id不能为空');
     }
+
 }

@@ -193,6 +193,8 @@ class GoodsController extends BaiscController
         $goods_id=$request->input('goods_id');
         $goods=$goods->with(['goods_class','goods_group','goods_images'])->find($goods_id);
         if($goods){
+            $goods_class=GoodsClass::all()->toTree();
+            $goods['goods_all_class']=$goods_class;
             return $this->success($goods);
         }
         return $this->failed('无此商品');
