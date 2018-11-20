@@ -3,183 +3,57 @@
 namespace App\Modules\Company\Http\Controllers;
 
 use App\Http\Controllers\BaiscController;
-use App\Model\Department;
-use App\Model\Employ;
-use App\Model\Menus;
-use App\Model\ShoppingGuide;
-use App\Model\Store;
-use Validator;
-use App\Model\Role;
-use Illuminate\Support\Facades\Storage;
+use App\Model\Area;
+use App\Model\Company;
 use Illuminate\Http\Request;
+use Cache;
 
 class CompanyController extends BaiscController
 {
 
     /**
-     * 员工列表
+     * 企业
      * @param Request $request
      * @return mixed
      */
-    public function employsList(Request $request,Employ $employ)
+    public function company(Request $request)
     {
-        $departments = Department::whereCompanyId($this->company_id)->select('id','dep_name')->get();
-        $roles = Role::whereCompanyId($this->company_id)->where('preinstall_role','<',$this->guide)->select('id','role_name')->forPage($request->post('page',1),$request->post('limit',self::LIMIT))->get();
-        $param = $request->only('page','limit','work_no','mobile','department_id','role_id');
-
-        $employs = Employ::employList($employ,$this->company_id,$param);
+        $company = Company::whereId($this->company_id)->first();
+        $areas = Cache::get('areas');
 
         $data = array(
-            'count' => count($employs),
-            'departments' => $departments,
-            'roles' => $roles,
-            'employs' => $employs
-        );
-        return $this->success($data);
-    }
-
-
-    public function employCreateShow()
-    {
-        $departments = Department::whereCompanyId($this->company_id)->select('id','dep_name')->get();
-        $roles = Role::whereCompanyId($this->company_id)->select('id','role_name')->get();
-        $stores = Store::whereCompanyId($this->company_id)->select('store_id','store_name')->get();
-
-        $data = array(
-            'departments' => $departments,
-            'roles' => $roles,
-            'stores' => $stores
+            '$areas' => $areas,
+            'employs' => $company
         );
         return $this->success($data);
     }
 
     /**
-     * 员工创建
+     * 企业修改
      * @param Request $request
      * @return mixed
      */
-    public function employCreate(Request $request)
+    public function companyUpdate(Request $request)
     {
-        $data = $request->all();
-        $validator = Validator::make($data,[
-            'name' => 'required',
-            'mobile' => 'required',
-            'sex' => 'required',
-            'department_id' => 'required',
-            'role_id' => 'required',
-            'status' => 'required',
-            'password' => 'required',
-        ],[
-            'name.required' => '请填写员工姓名',
-            'mobile.required' => '请填写员工手机',
-            'sex.required' => '请填写员工性别',
-            'department_id.required' => '请填写员工部门',
-            'role_id.required' => '请填写员工角色',
-            'status.required' => '请填写员工状态',
-            'password.required' => '请填写员工密码',
-        ]);
-        $error = $validator->errors()->all();
-        if(count($error)){
-            return $this->failed($error[0]);
+        $company = Company::whereId($request->post('company_id'))->first();
+        if($request->post('name','')){
+            $company->update(['name' => $request->post('name')]);
+        }
+        if($request->post('logo','')){
+            $company->update(['logo' => $request->post('logo')]);
+        }
+        if($request->post('telphone','')){
+            $company->update(['telphone' => $request->post('telphone')]);
+        }
+        if($request->post('company_address','')){
+            $param = array(
+                'province' => $request->post('province'),
+                'city' => $request->post('city'),
+                'area' => $request->post('area')
+            );
+            $company->update(['area_info' => json_encode($param),'company_address' => $request->post('company_address')]);
         }
 
-        $work_no = $request->post('work_no','');
-        if(!empty($work_no) && Employ::whereWorkNo($work_no)->whereCompanyId($this->company_id)->exists()){
-            return $this->failed('当前工号已存在');
-        };
-
-        $param = array(
-            'name' => $request->post('name'),
-            'mobile' => $request->post('mobile',''),
-            'sex' => $request->post('sex'),
-            'department_id' => $request->post('department_id'),
-            'role_id' => $request->post('role_id'),
-            'status' => $request->post('status'),
-            'password' => bcrypt($request->post('password')),
-            'company_id' => $this->company_id,
-            'shop_id' => $request->post('shop_id',0)
-        );
-
-        $employ = Employ::create($param);
-
-        if(empty($work_no)){
-            $work_no = date("ymdHis") . sprintf("%03d", substr($employ->id, -3));
-        }
-        $employ->work_no = $work_no;
-        $employ->save();
-
-        return $this->created('创建成功');
-    }
-
-
-    /**
-     * 角色修改
-     * @param Request $request
-     * @return mixed
-     */
-    public function employUpdate(Request $request)
-    {
-        $employ = Employ::whereId($request->post('role_id'))->first();
-        $param = array(
-            'name' => $request->post('name'),
-            'mobile' => $request->post('mobile',''),
-            'sex' => $request->post('sex'),
-            'department_id' => $request->post('department_id'),
-            'role_id' => $request->post('role_id'),
-            'status' => $request->post('status'),
-            'shop_id' => $request->post('shop_id',0)
-        );
-        $employ->update($param);
-
-        $work_no = $request->post('work_no','');
-        if(empty($work_no)){
-            return $this->failed('工号不能为空');
-        }
-
-        if(Employ::whereWorkNo($work_no)->whereCompanyId($this->company_id)->exists()){
-            return $this->failed('当前工号已存在');
-        };
-
-        $employ->update(['work_no' => $work_no]);
-        return $this->message('修改成功');
-    }
-
-    /**
-     * 修改展示
-     * @param Request $request
-     * @return mixed
-     */
-    public function employUpdateShow(Request $request)
-    {
-        $employ = Employ::whereId($request->post('employ_id'))->first();
-        if(is_null($employ)){
-            return $this->failed('当前员工不存在');
-        }
-        $departments = Department::whereCompanyId($this->company_id)->select('id','dep_name')->get();
-        $roles = Role::whereCompanyId($this->company_id)->select('id','role_name')->get();
-        $stores = Store::whereCompanyId($this->company_id)->select('store_id','store_name')->get();
-
-        $data = array(
-            'employ' => $employ,
-            'departments' => $departments,
-            'roles' => $roles,
-            'stores' => $stores
-        );
-        return $this->success($data);
-    }
-
-    /**
-     * 密码重置
-     * @param Request $request
-     * @return mixed
-     */
-    public function employPassword(Request $request)
-    {
-        $employ = Employ::whereId($request->post('employ_id'))->first();
-        if(is_null($employ)){
-            return $this->failed('当前员工不存在');
-        }
-        $employ->update(['password' => bcrypt($request->post('password'))]);
         return $this->message('修改成功');
     }
 

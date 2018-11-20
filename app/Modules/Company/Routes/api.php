@@ -22,6 +22,7 @@ Route::prefix('company')->group(function () {
     Route::post('login', 'LoginController@companyLogin');
     //员工管理
     Route::post('employs', 'EmployController@employsList')->name('employsList');
+    Route::get('employs/export', 'EmployController@employsExport')->name('employsExport');
     Route::post('employs/create', 'EmployController@employCreate')->name('employCreate');
     Route::post('roles/create/show', 'EmployController@employCreateShow')->name('employCreate');
     Route::post('employs/update/show', 'EmployController@employUpdateShow')->name('employUpdate');
@@ -43,10 +44,16 @@ Route::prefix('company')->group(function () {
     Route::post('menus/resorts', 'MenuController@resorts')->name('resorts');
     //品牌管理
     Route::post('company', 'CompanyController@company')->name('company');
-    Route::post('menus/create', 'MenuController@menuCreate')->name('menuCreate');
-    Route::post('menus/update', 'MenuController@menuUpdate')->name('menuUpdate');
-    Route::post('menus/delete', 'MenuController@menuDelete')->name('menuDelete');
-    Route::post('menus/updown', 'MenuController@upOrDown')->name('upOrDown');
-    Route::post('menus/resorts', 'MenuController@resorts')->name('resorts');
+    Route::post('company/update', 'CompanyController@companyUpdate')->name('companyUpdate');
+
+    Route::post('department', 'DepartmentController@departmentList')->name('departmentList');
+    Route::post('department/create', 'DepartmentController@departmentCreate')->name('departmentCreate');
+    Route::post('department/show', 'DepartmentController@departmentShow')->name('departmentShow');
+    Route::post('department/update', 'DepartmentController@departmentUpdate')->name('departmentUpdate');
+    Route::post('department/delete', 'DepartmentController@departmentDelete')->name('departmentDelete');
+
+    Route::post('stores', 'StoreController@stores')->name('stores');
+    Route::post('stores/create', 'StoreController@storesCreate')->name('storesCreate');
+    Route::post('stores/manager', 'StoreController@storesManager')->name('storesManager');
 
 });

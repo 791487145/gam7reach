@@ -2,6 +2,7 @@
 
 namespace App\Modules\Company\Http\Controllers;
 
+use App\Exports\EmployExport;
 use App\Http\Controllers\BaiscController;
 use App\Model\Department;
 use App\Model\Employ;
@@ -15,17 +16,7 @@ use Illuminate\Http\Request;
 
 class EmployController extends BaiscController
 {
-    protected $preinstall_role;
-    protected $shop_id;
-
-   /* public function __construct()
-    {
-        parent::__construct();
-        $employ = auth('employ')->user();
-        $role = $employ->role()->first();
-        /*$this->preinstall_role = $role->preinstall_role;
-        $this->shop_id = $employ->shop_id;
-    }*/
+    //protected $preinstall_role;
 
     /**
      * 员工列表
@@ -193,6 +184,24 @@ class EmployController extends BaiscController
         }
         $employ->update(['password' => bcrypt($request->post('password'))]);
         return $this->message('修改成功');
+    }
+
+    /**
+     * 员工导出
+     * @param Request $request
+     * @param EmployExport $employExport
+     * @return EmployExport
+     */
+    public function employsExport(Request $request,EmployExport $employExport)
+    {
+        $param = array(
+            'role_id' => $request->get('role_id',''),
+            'department_id' => $request->get('department_id',''),
+            'work_no' => $request->get('work_no',''),
+            'mobile' => $request->get('mobile',''),
+            'company_id' => $request->get('company_id',1),
+        );
+        return $employExport->withParam($param);
     }
 
 }

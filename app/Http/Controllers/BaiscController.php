@@ -26,6 +26,7 @@ class BaiscController extends BascController
             $name = Route::currentRouteName();
 
             $employ = auth('employ')->user();
+            //dd($employ);
             $this->company_id = $employ->company_id;
             return $next($request);
         });

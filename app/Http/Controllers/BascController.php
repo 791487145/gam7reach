@@ -7,9 +7,10 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Apiresponse\ApiResponses;
+use App\Http\Controllers\Common\Common;
 
 class BascController extends Controller
 {
-    use ApiResponses;
+    use ApiResponses,Common;
 
 }
