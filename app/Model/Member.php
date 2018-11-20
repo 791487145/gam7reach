@@ -98,7 +98,9 @@ class Member extends Eloquent
     /*
      * 所属门店
      */
-
+    public function store(){
+        return $this->hasOne(Store::class,'store_id','store_id');
+    }
     /*
      * 会员列表
      */
@@ -118,7 +120,7 @@ class Member extends Eloquent
         }
         $list=$this->with(['grade'=>function($query){
             $query->select(['grade_id','grade_name']);
-        }])->where($where)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get();
+        },'store'])->where($where)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get();
         $list->each(function ($item,$key){
             $item->member_sex=$item->member_sex?'男':'女';
             $item->source_channel=$this->getChannel($item->source_channel);

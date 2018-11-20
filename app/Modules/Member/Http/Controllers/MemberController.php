@@ -10,6 +10,7 @@ use App\Http\Controllers\BaiscController;
 use App\Model\Member;
 use App\Model\MemberGrade;
 use App\Model\MemberTag;
+use App\Model\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -97,7 +98,7 @@ class MemberController extends BaiscController{
                 $query->select(['grade_id','grade_name']);
             },'tags'=>function($query){
                 $query->select(['tag_id','mtag_name']);
-            }])->find($member_id);
+            },'store'])->find($member_id);
             //获取启用的会员等级列表
             $member_grades=MemberGrade::Enable()->where('company_id',$this->company_id)
                 ->select(['grade_id','grade_name'])->get();
@@ -106,7 +107,12 @@ class MemberController extends BaiscController{
             $member_tags=MemberTag::where('company_id',$this->company_id)
                 ->select(['tag_id','mtag_name'])->get();
             $member_info['member_tags']=$member_tags;
+            //获取全部门店
+            $store_list=Store::where(['company_id'=>$this->company_id,'store_state'=>1])
+                ->select(['store_id','store_name'])->get();
+            $member_info['store_all']=$store_list;
             return $this->success($member_info);
+
         }
         return $this->failed('会员id不能为空');
     }
