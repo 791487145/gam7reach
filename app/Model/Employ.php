@@ -66,6 +66,7 @@ class Employ extends Authenticatable implements JWTSubject
 	protected $casts = [
 		'company_id' => 'int',
 		'department_id' => 'int',
+		'shop_id' => 'int',
 		'sex' => 'int',
 		'status' => 'int',
 		'created_at' => 'int',

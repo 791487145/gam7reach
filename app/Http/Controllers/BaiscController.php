@@ -31,7 +31,7 @@ class BaiscController extends BascController
             }
             //dd($employ);
             $this->company_id = $employ->company_id;
-            $this->store_id = $employ->shop_id;
+            $this->store_id = $employ->commpany_id;
             return $next($request);
         });
     }
