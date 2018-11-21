@@ -2,6 +2,7 @@
 
 namespace App\Modules\Company\Http\Controllers;
 
+use App\Exports\StoreExport;
 use App\Http\Controllers\BaiscController;
 use App\Model\Area;
 use App\Model\Company;
@@ -14,6 +15,13 @@ use Illuminate\Http\Request;
 
 class StoreController extends BaiscController
 {
+    protected $preinstall_role;
+    public function __construct()
+    {
+        parent::__construct();
+        $role = auth('employ')->user()->role;
+        $this->preinstall_role = $role->preinstall_role;
+    }
 
     /**
      * 企业
@@ -25,6 +33,14 @@ class StoreController extends BaiscController
         $stores = new Store();
         $stores = $stores->whereCompanyId($this->company_id);
         $regions = RegisionManager::whereCompanyId($this->company_id)->select('id','name')->get();
+        $employ = auth('employ')->user();
+
+        if($this->preinstall_role == $this->region){
+            $stores = $stores->whereNotIn('id',explode(',',$employ->store_id));
+        }
+        if($this->preinstall_role == $this->shoper){
+            $stores = $stores->whereStoreId($employ->shop_id);
+        }
 
         $param = $request->only('reg_id','store_name','store_state');
         if(!empty($param['store_state'])){
@@ -33,7 +49,7 @@ class StoreController extends BaiscController
         if(!empty($param['reg_id'])){
             $stores = $stores->whereRegId($param['reg_id']);
         }
-        if(!empty($param['store_state'])){
+        if(!empty($param['store_name'])){
             $stores = $stores->where('store_name','like','%'.$param['store_name'].'%');
         }
 
@@ -42,6 +58,7 @@ class StoreController extends BaiscController
         foreach ($stores as $store){
             $store->reg_name = RegisionManager::whereId($store->id)->value('name');
             $store->store_state_name = Store::stateCN($store->store_state);
+            $store->store_detail_add = Store::addressCN($store->area_info).$store->store_address;
         }
 
         $data = array(
@@ -50,6 +67,17 @@ class StoreController extends BaiscController
             'regions' => $regions
         );
         return $this->success($data);
+    }
+
+    public function storesExport(Request $request,StoreExport $storeExport)
+    {
+        $param = array(
+            'store_state' => $request->get('store_state',''),
+            'reg_id' => $request->get('reg_id',''),
+            'store_name' => $request->get('store_name',''),
+            'company_id' => $request->get('company_id',1),
+        );
+        return $storeExport->withParam($param);
     }
 
     /**

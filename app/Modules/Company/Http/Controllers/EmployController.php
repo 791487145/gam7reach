@@ -16,8 +16,6 @@ use Illuminate\Http\Request;
 
 class EmployController extends BaiscController
 {
-    //protected $preinstall_role;
-
     /**
      * 员工列表
      * @param Request $request

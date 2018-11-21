@@ -119,4 +119,9 @@ class ShoppingGuide extends Eloquent
 
         return $shoppingGuide;
     }
+
+    public function store()
+    {
+        return $this->hasOne(Store::class,'store_id','store_id');
+    }
 }

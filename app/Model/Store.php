@@ -142,4 +142,23 @@ class Store extends Eloquent
         );
         return $param[$status];
     }
+
+    static function addressCN($address)
+    {
+        $address = json_decode($address);
+        $province = Area::whereAreaId($address['provine'])->value('area_name');
+        $city = Area::whereAreaId($address['city'])->value('area_name');
+        $area = Area::whereAreaId($address['area'])->value('area_name');
+        return $province.$city.$area;
+    }
+
+    public function regision_manage()
+    {
+        return $this->hasOne(RegisionManager::class,'id','reg_id');
+    }
+
+    public function empoly()
+    {
+        return $this->hasOne(Employ::class,'id','store_manager_id');
+    }
 }

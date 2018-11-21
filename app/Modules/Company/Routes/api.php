@@ -45,15 +45,22 @@ Route::prefix('company')->group(function () {
     //品牌管理
     Route::post('company', 'CompanyController@company')->name('company');
     Route::post('company/update', 'CompanyController@companyUpdate')->name('companyUpdate');
-
+    //部门
     Route::post('department', 'DepartmentController@departmentList')->name('departmentList');
     Route::post('department/create', 'DepartmentController@departmentCreate')->name('departmentCreate');
     Route::post('department/show', 'DepartmentController@departmentShow')->name('departmentShow');
     Route::post('department/update', 'DepartmentController@departmentUpdate')->name('departmentUpdate');
     Route::post('department/delete', 'DepartmentController@departmentDelete')->name('departmentDelete');
-
+    //店铺
     Route::post('stores', 'StoreController@stores')->name('stores');
     Route::post('stores/create', 'StoreController@storesCreate')->name('storesCreate');
     Route::post('stores/manager', 'StoreController@storesManager')->name('storesManager');
+    Route::post('stores/area', 'StoreController@getArea')->name('getArea');
+    Route::get('stores/export', 'StoreController@storesExport')->name('storesExport');
+    //店员
+    Route::post('guides', 'GuideController@guides')->name('guides');
+    Route::get('guides/export', 'GuideController@guideExport')->name('guideExport');
+    Route::post('guides/update/show', 'GuideController@guideUpdateShow')->name('guidesUpdateShow');
+    Route::post('guides/update', 'GuideController@guideUpdate')->name('Update');
 
 });
