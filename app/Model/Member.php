@@ -104,7 +104,11 @@ class Member extends Eloquent
     /*
      * 会员列表
      */
-    public function getList($request,$company_id){
+    public function getList($request,$company_id,$store_Id){
+        $whereIn='0=0';
+        if($store_Id){//如果是店长或是区经
+            $whereIn="store_id in($store_Id)";
+        }
         $where['company_id']=$company_id;
         if($request->input('member_truename')){//姓名筛选
             $where['member_truename']=$request->input('member_truename');
@@ -120,7 +124,9 @@ class Member extends Eloquent
         }
         $list=$this->with(['grade'=>function($query){
             $query->select(['grade_id','grade_name']);
-        },'store'])->where($where)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get();
+        },'store'=>function($query){
+            $query->select(['store_id','store_name']);
+        }])->where($where)->whereRaw($whereIn)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get();
         $list->each(function ($item,$key){
             $item->member_sex=$item->member_sex?'男':'女';
             $item->source_channel=$this->getChannel($item->source_channel);
