@@ -99,7 +99,9 @@ class Member extends Eloquent
      * 所属门店
      */
     public function store(){
-        return $this->hasOne(Store::class,'store_id','store_id');
+
+       return $this->hasOne(Store::class,'store_id','store_id');
+
     }
     /*
      * 会员列表

@@ -31,7 +31,7 @@ class MemberTag extends Eloquent
 	];
 
 	protected $fillable = [
-		'tag_name',
+		'mtag_name',
 		'mtag_setting',
 		'company_id'
 	];

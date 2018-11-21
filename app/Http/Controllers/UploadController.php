@@ -15,6 +15,16 @@ class UploadController extends BascController
             return response()->json(['pic'=>$pic]);
         }
     }
+    /*
+     * 上传商品图片
+     */
+    public function goodsPicUpload(Request $request){
+        if($request->file('file')){
+            $pic = Storage::putFile('goods',$request->file('file'));
+            return response()->json(['pic'=>$pic]);
+        }
+    }
+
     public function fileDelete(Request $request)
     {
         $file = $request->post('file');

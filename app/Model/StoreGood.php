@@ -92,9 +92,10 @@ class StoreGood extends Eloquent
         return $this->hasOne(Goods::class,'goods_id','goods_id');
     }
     /*
-     * 旗舰店商品列表
+     * 云店商品列表
      */
     public function getList($request,$company_id){
+
         $where['company_id']=$company_id;
         $where_other['store_id']=$request->input('store_id');
         if($request->input('goods_name')){//商品名筛选
