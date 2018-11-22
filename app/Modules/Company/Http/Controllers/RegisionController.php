@@ -42,11 +42,16 @@ class RegisionController extends BaiscController
         return $this->success($data);
     }
 
+    /**
+     * 店铺展示
+     * @param Request $request
+     * @return mixed
+     */
     public function regisionCreateStoreShow(Request $request)
     {
         $stores = new Store();
         $stores = $stores->whereCompanyId($this->company_id)->whereNull('reg_id');
-        $StoreName = $request->post('StoreName','');
+        $StoreName = $request->post('store_name','');
         if(!empty($StoreName)){
             $stores = $stores->where('store_name','like','%'.$StoreName.'%');
         }
@@ -55,10 +60,18 @@ class RegisionController extends BaiscController
         return $this->success($stores);
     }
 
+    /**
+     * 人员展示
+     * @param Request $request
+     * @return mixed
+     */
     public function regisionCreateEmployShow(Request $request)
     {
         $role = Role::whereCompanyId($this->company_id)->wherePreinstallRole($this->region)->first();
         $reg_employ_id = RegisionManager::whereCompanyId($this->company_id)->pluck('reg_employ_id');
+        if(empty($reg_employ_id)){
+            $reg_employ_id = array();
+        }
         $employs = Employ::whereCompanyId($this->company_id)->whereNotIn('id',$reg_employ_id)->whereRoleId($role->id)->select('id','name')->get();
         return $this->success($employs);
     }
@@ -80,54 +93,67 @@ class RegisionController extends BaiscController
 
         $store_id = $request->post('store_id');
         Employ::whereId($regision->reg_employ_id)->update(['store_id' => $store_id]);
-        Store::whereIn('id',explode(',',$store_id))->update(['reg_id' => $regision->id]);
+        Store::whereIn('store_id',explode(',',$store_id))->update(['reg_id' => $regision->id]);
         DB::commit();
         return $this->created('创建成功');
     }
 
     /**
-     * 部门展示
+     * 区域展示
      * @param Request $request
      * @return mixed
      */
-    public function departmentShow(Request $request)
+    public function regisionShow(Request $request)
     {
-        $department = Department::whereId($request->post('department_id'))->first();
-        return $this->success($department);
+        $regision = RegisionManager::whereId($request->post('regision_manage_id'))->first();
+        $regision->store_id = Store::whereRegId($regision->id)->pluck('store_id');
+        return $this->success($regision);
     }
 
     /**
-     * 部门修改
+     * 区域修改
      * @param Request $request
      * @return mixed
      */
-    public function departmentUpdate(Request $request)
+    public function regisionUpdate(Request $request)
     {
-        $department = Department::whereId($request->post('department_id'))->first();
+        $regision = RegisionManager::whereId($request->post('regision_manage_id'))->first();
+        DB::beginTransaction();
+        $regision->name = $request->post('name');
+        $regision->mobile = $request->post('mobile','');
+        $regision->save();
 
-        $department->dep_name = $request->post('dep_name');
-        $department->dep_description = $request->post('dep_description','');
-        $department->dep_tel = $request->post('dep_tel',0);
-        $department->save();
+        $store_id = $request->post('store_id');
+        $reg_employ_id = $request->post('reg_employ_id');
+        if($regision->reg_employ_id != $reg_employ_id){
+            Employ::whereId($regision->reg_employ_id)->update(['store_id' => null]);
+            $regision->reg_employ_id = $reg_employ_id;
+            $regision->save();
+        }
+
+        Employ::whereId($reg_employ_id)->update(['store_id' => $store_id]);
+        Store::whereIn('store_id',explode(',',$store_id))->update(['reg_id' => $regision->id]);
+        DB::commit();
         return $this->message('修改成功');
     }
 
     /**
-     * 部门删除
+     * 区域删除
      * @param Request $request
      * @return mixed
      */
-    public function departmentDelete(Request $request)
+    public function regisionDelete(Request $request)
     {
-        $department = Department::whereId($request->post('department_id'))->first();
-        if(is_null($department)){
-            return $this->failed('暂无此部门');
+        $regision = RegisionManager::whereId($request->post('regision_manage_id'))->first();
+        if(is_null($regision)){
+            return $this->failed('暂无此区域');
         }
 
-        if(Employ::whereDepartmentId($department->id)->whereCompanyId($this->company_id)->exists()){
-            return $this->failed('部门下有人存在，不能删除');
+        if(Store::whereRegId($regision->id)->whereCompanyId($this->company_id)->exists()){
+            return $this->failed('区域下有门店存在，不能删除');
         };
-        $department->delete();
+        $regision->delete();
+        Employ::whereId($regision->reg_employ_id)->update(['store_id' => null]);
         return $this->message('删除成功');
     }
 

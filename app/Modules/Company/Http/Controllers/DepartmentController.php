@@ -28,6 +28,10 @@ class DepartmentController extends BaiscController
         $dapartments = Department::whereCompanyId($this->company_id)->select('dep_name','dep_tel','dep_employ_id','id')
             ->forPage($request->post('page',1),$request->post('limit',self::LIMIT))->get();
 
+        foreach ($dapartments as $dapartment){
+            $dapartment->employ_name = Employ::whereId($dapartment->dep_employ_id)->value('name');
+        }
+
         $data = array(
             'department_count' => count($dapartments),
             'departments' => $dapartments,
