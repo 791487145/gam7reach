@@ -47,10 +47,19 @@ Route::prefix('company')->group(function () {
     Route::post('company/update', 'CompanyController@companyUpdate')->name('companyUpdate');
     //部门
     Route::post('department', 'DepartmentController@departmentList')->name('departmentList');
+    Route::post('department/employ', 'DepartmentController@departmentEmploy')->name('departmentEmploy');
     Route::post('department/create', 'DepartmentController@departmentCreate')->name('departmentCreate');
     Route::post('department/show', 'DepartmentController@departmentShow')->name('departmentShow');
     Route::post('department/update', 'DepartmentController@departmentUpdate')->name('departmentUpdate');
     Route::post('department/delete', 'DepartmentController@departmentDelete')->name('departmentDelete');
+    //区域
+    Route::post('regisions', 'RegisionController@regisionList')->name('regisionList');
+    Route::post('regisions/create/store/show', 'RegisionController@regisionCreateStoreShow')->name('regisionCreateStoreShow');
+    Route::post('regisions/create/employ/show', 'RegisionController@regisionCreateEmployShow')->name('regisionCreateEmployShow');
+    Route::post('regisions/create', 'RegisionController@regisionCreate')->name('regisionCreate');
+    Route::post('regisions/show', 'RegisionController@regisionShow')->name('regisionShow');
+    Route::post('regisions/update', 'RegisionController@regisionUpdate')->name('regisionUpdate');
+    Route::post('regisions/delete', 'RegisionController@regisionDelete')->name('regisionDelete');
     //店铺
     Route::post('stores', 'StoreController@stores')->name('stores');
     Route::post('stores/create', 'StoreController@storesCreate')->name('storesCreate');

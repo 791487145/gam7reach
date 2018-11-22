@@ -54,6 +54,18 @@ class DepartmentController extends BaiscController
     }
 
     /**
+     * 非部门负责人
+     * @param Request $request
+     * @return mixed
+     */
+    public function departmentEmploy(Request $request)
+    {
+        $dep_employ_ids = Department::whereCompanyId($this->company_id)->pluck('dep_employ_id');
+        $employs = Employ::whereCompanyId($this->company_id)->whereNotIn('id',$dep_employ_ids)->select('id','name')->get();
+        return $this->success($employs);
+    }
+
+    /**
      * 部门展示
      * @param Request $request
      * @return mixed
