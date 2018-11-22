@@ -73,6 +73,7 @@ class DepartmentController extends BaiscController
     public function departmentShow(Request $request)
     {
         $department = Department::whereId($request->post('department_id'))->first();
+        $department->employ_name = Employ::whereId($department->dep_employ_id)->value('name');
         return $this->success($department);
     }
 
@@ -88,6 +89,7 @@ class DepartmentController extends BaiscController
         $department->dep_name = $request->post('dep_name');
         $department->dep_description = $request->post('dep_description','');
         $department->dep_tel = $request->post('dep_tel',0);
+        $department->dep_employ_id = $request->post('dep_employ_id',0);
         $department->save();
         return $this->message('修改成功');
     }
