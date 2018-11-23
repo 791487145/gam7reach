@@ -46,23 +46,8 @@ class StoreGood extends Eloquent
     const UPDATED_AT = 'goods_edittime';
 
 	protected $casts = [
-		'goods_id' => 'int',
-		'goods_store_price' => 'float',
-		'goods_promotion_price' => 'float',
-		'goods_promotion_type' => 'int',
-		'goods_click' => 'int',
-		'goods_salenum' => 'int',
-		'goods_collect' => 'int',
-		'goods_storage' => 'int',
-		'goods_state' => 'int',
-		'goods_addtime' => 'int',
-		'goods_edittime' => 'int',
-		'goods_freight' => 'float',
-		'goods_commend' => 'int',
-		'evaluation_count' => 'int',
-		'store_id' => 'int',
-		'company_id' => 'int',
-		'is_points' => 'int'
+        'goods_addtime' => 'date:Y-m-d',
+        'goods_edittime' => 'datetime:Y-m-d H:i',
 	];
 
 	protected $fillable = [
@@ -85,6 +70,17 @@ class StoreGood extends Eloquent
 		'company_id',
 		'is_points'
 	];
+    /*
+     * 获取状态
+     */
+    protected function getGoodsState($key){
+        $state=array(
+            '0'=>'下架',
+            '1'=>'正常',
+            '2'=>'售罄',
+        );
+        return $state[$key];
+    }
     /*
      * 商品信息
      */
@@ -113,28 +109,15 @@ class StoreGood extends Eloquent
         if(isset($goods_state)){//商品状态
             $where_other['goods_state']=$goods_state;
         }
-        $list=$this->with(['goods'=>function($query) use($where){
+
+
+        $list=$this->whereHas('goods',function ($query) use ($where){
             $query->where($where);
-        }])->where($where_other)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get()->toArray();
-        $goods_list=array();
-        foreach ($list as  $key=>$goods){
-            $goods_list[$key]=$goods;
-            $goods_list[$key]['goods_name']=$goods['goods']['goods_name'];
-            $goods_list[$key]['goods_spuno']=$goods['goods']['goods_spuno'];
-            $goods_list[$key]['goods_group_id']=$goods['goods']['goods_group_id'];
-            $goods_list[$key]['goods_image']=$goods['goods']['goods_image'];
-            if($goods['goods_state']==1){
-                $goods_list[$key]['goods_state']='上架';
-            }elseif($goods['goods_state']==2){
-                $goods_list[$key]['goods_state']='售罄';
-            }else{
-                $goods_list[$key]['goods_state']='下架';
-            }
-            $goods_list[$key]['goods_addtime']=date('Y-m-d H:i:s',$goods['goods_addtime']);
-            $goods_list[$key]['goods_edittime']=date('Y-m-d H:i:s',$goods['goods_edittime']);
-            unset($goods_list[$key]['goods']);
-        }
-        return $goods_list;
+        })->with(['goods'])->where($where_other)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get();
+        $list->each(function ($item,$key){
+            $item->goods_state=$this->getGoodsState($item->goods_state);
+        });
+        return $list;
     }
     /*
 	 * 添加商品

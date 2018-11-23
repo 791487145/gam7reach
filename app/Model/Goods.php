@@ -10,6 +10,7 @@ namespace App\Model;
 
 use App\Http\Controllers\BaiscController;
 use App\Model\GoodsClass;
+use Carbon\Carbon;
 use Reliese\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Facades\DB;
 
@@ -63,18 +64,11 @@ class Goods extends Eloquent
     protected $dateFormat = 'U';
     const CREATED_AT = 'goods_addtime';
     const UPDATED_AT = 'goods_edittime';
+    protected $casts = [
+        'goods_addtime'   => 'date:Y-m-d',
+        'goods_edittime'   => 'datetime:Y-m-d H:i',
 
-	protected $casts = [
-		'goods_group_id' => 'int',
-		'company_id' => 'int',
-		'gc_id' => 'int',
-		'goods_price' => 'float',
-		'goods_marketprice' => 'float',
-		'goods_state' => 'int',
-		'goods_addtime' => 'int',
-		'goods_edittime' => 'int'
-	];
-
+    ];
 	protected $fillable = [
 		'goods_spuno',
 		'goods_name',
@@ -152,16 +146,11 @@ class Goods extends Eloquent
         if($request->input('gc_id')){//商品分类
             $where['gc_id']=$request->input('gc_id');
         }
-        $list=$this->where($where)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get()->toArray();
-
-        $goods_list=array();
-        foreach ($list as  $key=>$goods){
-            $goods_list[$key]=$goods;
-            $goods_list[$key]['goods_state']=$goods['goods_state']?'上架':'下架';
-            $goods_list[$key]['goods_addtime']=date('Y-m-d H:i:s',$goods['goods_addtime']);
-            $goods_list[$key]['goods_edittime']=date('Y-m-d H:i:s',$goods['goods_edittime']);
-        }
-        return  $goods_list;
+        $list=$this->where($where)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get();
+        $list->each(function($item,$key){
+            $item->goods_state=$item->goods_state?'上架':'下架';
+        });
+        return  $list;
     }
     /*
      * 添加商品
@@ -170,7 +159,7 @@ class Goods extends Eloquent
         //获取企业默认相册
         $albumClass=AlbumClass::where(['company_id'=>$date['company_id'],'is_default'=>1])->first();
         if($date['goods_images']){//处理商品图片
-            $goods_images=explode(',',$date['goods_images']);
+            $goods_images=$date['goods_images'];
             $date['goods_image']=$goods_images[0];
             unset($date['goods_images']);
             DB::transaction(function () use($goods_images,$date,$albumClass){//开启事务
@@ -194,7 +183,7 @@ class Goods extends Eloquent
         //获取企业默认相册
         $albumClass=AlbumClass::where(['company_id'=>$date['company_id'],'is_default'=>1])->first();
         if($date['goods_images']){
-            $goods_images=explode(',',$date['goods_images']);
+            $goods_images=$date['goods_images'];
             $date['goods_image']=$goods_images[0];
             unset($date['goods_images']);
             DB::transaction(function() use ($date,$goods_images,$albumClass){

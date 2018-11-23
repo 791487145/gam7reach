@@ -20,7 +20,9 @@ class MemberTagController extends BaiscController{
     public function list(Request $request){
         $list=MemberTag::where('company_id',$this->company_id)->
         forPage($request->input('page',1),$request->input('limit',10))->get();
-        return $this->success($list);
+        $data['tag_count']=$list->count();
+        $data['memberTags']=$list;
+        return $this->success($data);
     }
     /*
      * 添加会员标签
