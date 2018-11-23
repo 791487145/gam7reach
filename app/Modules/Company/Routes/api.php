@@ -35,7 +35,7 @@ Route::prefix('company')->group(function () {
     Route::post('roles/update/show', 'RoleController@roleUpdateShow')->name('roleUpdateShow');
     Route::post('roles/update', 'RoleController@roleUpdate')->name('roleUpdate');
     Route::post('roles/delete', 'RoleController@roleDelete')->name('roleDelete');
-
+    //菜单
     Route::post('menus', 'MenuController@menuShow')->name('menuShow');
     Route::post('menus/create', 'MenuController@menuCreate')->name('menuCreate');
     Route::post('menus/update', 'MenuController@menuUpdate')->name('menuUpdate');
