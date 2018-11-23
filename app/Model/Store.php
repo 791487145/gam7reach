@@ -90,7 +90,7 @@ class Store extends Eloquent
 		'company_id' => 'int',
 		'reg_id' => 'int',
 		'store_recommend' => 'int',
-		'store_state' => 'bool',
+		'store_state' => 'int',
 		'store_sort' => 'int',
 		'store_collect' => 'int',
 		'store_sales' => 'int',
@@ -145,10 +145,11 @@ class Store extends Eloquent
 
     static function addressCN($address)
     {
-        $address = json_decode($address);
-        $province = Area::whereAreaId($address['provine'])->value('area_name');
+        $address = json_decode($address,true);
+        $province = Area::whereAreaId($address['province'])->value('area_name');
         $city = Area::whereAreaId($address['city'])->value('area_name');
         $area = Area::whereAreaId($address['area'])->value('area_name');
+        //dd($province);
         return $province.$city.$area;
     }
 

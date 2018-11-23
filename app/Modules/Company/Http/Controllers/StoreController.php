@@ -59,7 +59,11 @@ class StoreController extends BaiscController
         foreach ($stores as $store){
             $store->reg_name = RegisionManager::whereId($store->id)->value('name');
             $store->store_state_name = Store::stateCN($store->store_state);
-            //$store->store_detail_add = Store::addressCN($store->area_info).$store->store_address;
+            $store->store_manager_name = '';
+            if(Employ::whereId($store->store_manager_id)->exists()){
+                $store->store_manager_name = $store->empoly()->first()->name;
+            }
+            $store->store_detail_add = Store::addressCN($store->area_info).$store->store_address;
         }
 
         $data = array(
