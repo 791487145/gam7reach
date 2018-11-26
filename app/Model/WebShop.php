@@ -11,7 +11,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rWebShop
- * 
+ *
  * @property int $shop_id
  * @property int $company_id
  * @property int $reg_id
@@ -38,8 +38,37 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property string $shop_free_time
  * @property int $created_at
  * @property int $updated_at
- *
  * @package App\Models
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereAreaInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereGoodComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereLonLati($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereRegId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopAftersales($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopCloseInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopCollect($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopEndTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopFreeTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopKeywords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopPhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopPresales($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopRecommend($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopSales($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopSlide($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopTheme($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereShopZip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\WebShop whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class WebShop extends Eloquent
 {

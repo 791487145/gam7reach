@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Company\Http\Controllers;
+namespace App\Modules\Trade\Http\Controllers;
 
 use App\Http\Controllers\BaiscController;
 use App\Model\Area;
@@ -9,7 +9,7 @@ use App\Model\MainCategory;
 use Illuminate\Http\Request;
 use Cache;
 
-class CompanyController extends BaiscController
+class IndexController extends BaiscController
 {
 
     /**
@@ -35,7 +35,7 @@ class CompanyController extends BaiscController
      */
     public function companyUpdate(Request $request)
     {
-        $company = Company::whereId($this->company_id)->first();
+        $company = Company::whereId($request->post('company_id'))->first();
         if($request->post('name','')){
             $company->update(['name' => $request->post('name')]);
         }

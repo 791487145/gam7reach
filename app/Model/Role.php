@@ -32,6 +32,8 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @mixin \Eloquent
  * @property string|null $deccripe 描述
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Role whereDeccripe($value)
+ * @property string|null $descripe 描述
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Role whereDescripe($value)
  */
 class Role extends Eloquent
 {

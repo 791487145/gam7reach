@@ -13,7 +13,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rMember
- * 
+ *
  * @property int $member_id
  * @property string $member_truename
  * @property bool $member_sex
@@ -37,8 +37,37 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property string $member_wxopenid
  * @property int $company_id
  * @property int $store_id
- *
  * @package App\Models
+ * @property-read \App\Model\MemberGrade $grade
+ * @property-read \App\Model\Store $store
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Model\MemberTag[] $tags
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereAvailablePredeposit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereFreezePredeposit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberBirthday($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberExppoints($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberGradeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberLoginIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberLoginTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberMobile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberMobileBind($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberOldLoginIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberOldLoginTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberPaypwd($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberPoints($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberSex($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberTruename($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereMemberWxopenid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereSourceChannel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereStoreId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereWeixinInfo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereWeixinUnionid($value)
+ * @mixin \Eloquent
  */
 class Member extends Eloquent
 {

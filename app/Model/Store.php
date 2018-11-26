@@ -76,6 +76,8 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Store whereStoreZip($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Store whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Model\Employ $empoly
+ * @property-read \App\Model\RegisionManager $regision_manage
  */
 class Store extends Eloquent
 {
