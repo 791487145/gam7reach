@@ -19,10 +19,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::prefix('upload')->group(function(){
-   
+
     Route::post('goods','UploadController@goodsPicUpload')->name('uploadGoods');
+
+    Route::post('/upload/store', 'UploadController@storeLogo');
+    Route::post('/upload/company', 'UploadController@companyAvater');
 });
 
-Route::post('/upload/store', 'UploadController@storeLogo');
-Route::post('/upload/company', 'UploadController@companyAvater');
+
 
