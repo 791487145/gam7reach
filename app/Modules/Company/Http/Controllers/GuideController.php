@@ -13,7 +13,11 @@ use Cache;
 
 class GuideController extends BaiscController
 {
-
+    /**
+     * 店员列表
+     * @param Request $request
+     * @return mixed
+     */
     public function guides(Request $request)
     {
         $stores = Store::whereCompanyId($this->company_id)->select('store_id','store_name')->get();
@@ -33,7 +37,7 @@ class GuideController extends BaiscController
                     ->select('sg_id','sg_name','store_id')->get();
 
         foreach ($shop_guides as $shop_guide){
-            $store = $shop_guide->store;
+            $store = $shop_guide->store()->first();
             $shop_guide->store_name = $store->store_name;
             $shop_guide->store_photo = $store->store_photo;
             $shop_guide->regision_mamage = $store->regision_manage->name;
@@ -47,35 +51,51 @@ class GuideController extends BaiscController
         return $this->success($data);
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function guideUpdateShow(Request $request)
     {
         $shop_guide = ShoppingGuide::whereSgId($request->post('sg_id'))->first();
         $stores = Store::whereCompanyId($this->company_id)->select('store_id','store_name')->get();
 
         $data = array(
-            '$shop_guide' => $shop_guide,
-            '$stores' => $stores
+            'shop_guide' => $shop_guide,
+            'stores' => $stores
         );
         return $this->success($data);
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
     public function guideUpdate(Request $request)
     {
         $shop_guide = ShoppingGuide::whereSgId($request->post('sg_id'))->first();
         $param = array(
             'sg_name' => $request->post('sg_name'),
-            'store_id' => $request->post('store_id')
+            'store_id' => $request->post('store_id'),
+            'sg_nickname' => $request->post('sg_nickname',''),
+            'sg_mobile' => $request->post('sg_mobile',''),
+            'status' => $request->post('status','')
         );
         $shop_guide->update($param);
         return $this->message('修改成功');
     }
 
+    /**
+     * @param Request $request
+     * @param GuideExport $guideExport
+     * @return GuideExport
+     */
     public function guideExport(Request $request,GuideExport $guideExport)
     {
         $param = array(
             'store_id' => $request->post('store_id',''),
             'sg_name' => $request->post('sg_name',''),
-            'company_id' => $request->post('company_id',1)
+            'company_id' => $this->company_id
         );
         return $guideExport->withParam($param);
     }

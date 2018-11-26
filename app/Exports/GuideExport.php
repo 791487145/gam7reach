@@ -45,14 +45,14 @@ class GuideExport implements Responsable,FromQuery,WithMapping,WithHeadings,With
         return $guide;
     }
 
-    public function map($employ): array
+    public function map($guide): array
     {
         return [
-            $employ->sg_id,
-            $employ->sg_name,
-            $employ->store->store_name,
-            $employ->store->regision_manage->name,
-            $employ->store->store_photo,
+            $guide->sg_id,
+            $guide->sg_name,
+            $guide->store->store_name,
+            $guide->store->regision_manage->name,
+            $guide->store->store_photo,
         ];
     }
 
@@ -76,9 +76,9 @@ class GuideExport implements Responsable,FromQuery,WithMapping,WithHeadings,With
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $event->sheet->getColumnDimension('C')->setAutoSize(false)->setWidth(10);
-                $event->sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(15);
-                $event->sheet->getColumnDimension('H')->setAutoSize(false)->setWidth(20);
+                $event->sheet->getColumnDimension('B')->setAutoSize(false)->setWidth(15);
+                $event->sheet->getColumnDimension('D')->setAutoSize(false)->setWidth(15);
+                $event->sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(20);
             }
         ];
     }

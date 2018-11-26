@@ -38,7 +38,10 @@ class EmployController extends BaiscController
         return $this->success($data);
     }
 
-
+    /**
+     * 创建展示
+     * @return mixed
+     */
     public function employCreateShow()
     {
         $departments = Department::whereCompanyId($this->company_id)->select('id','dep_name')->get();

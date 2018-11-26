@@ -22,8 +22,8 @@ Route::prefix('upload')->group(function(){
 
     Route::post('goods','UploadController@goodsPicUpload')->name('uploadGoods');
 
-    Route::post('/upload/store', 'UploadController@storeLogo');
-    Route::post('/upload/company', 'UploadController@companyAvater');
+    Route::post('store', 'UploadController@storeLogo');
+    Route::post('company', 'UploadController@companyAvater');
 });
 
 
