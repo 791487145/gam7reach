@@ -26,10 +26,11 @@ class BaiscController extends BascController
             $name = Route::currentRouteName();
 
             $employ = auth('employ')->user();
+
             if(empty($employ)){
                 return $this->failed('token过期或不正确');
             }
-            //dd($employ);
+
             $this->company_id = $employ->company_id;
             $this->store_id = $employ->store_id;
             return $next($request);

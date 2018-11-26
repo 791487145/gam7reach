@@ -19,11 +19,12 @@ class CompanyController extends BaiscController
     public function company(Request $request)
     {
         $company = Company::whereId($this->company_id)->first();
+
         $areas = Cache::get('areas');
 
         $data = array(
-            '$areas' => $areas,
-            'employs' => $company
+            'areas' => $areas,
+            'company' => $company
         );
         return $this->success($data);
     }
