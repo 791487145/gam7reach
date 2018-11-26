@@ -30,6 +30,7 @@ Route::prefix('company')->group(function () {
     Route::post('employs/password', 'EmployController@employPassword')->name('employPassword');
     //角色管理
     Route::post('roles', 'RoleController@roleList')->name('roleList');
+    Route::post('roles/menus', 'RoleController@roleMenu')->name('roleMenu');
     Route::post('roles/create', 'RoleController@roleCreate')->name('roleCreate');
     Route::post('roles/show', 'RoleController@roleShow')->name('roleShow');
     Route::post('roles/update/show', 'RoleController@roleUpdateShow')->name('roleUpdateShow');

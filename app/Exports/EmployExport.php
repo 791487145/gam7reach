@@ -93,9 +93,8 @@ class EmployExport implements Responsable,FromQuery,WithMapping,WithHeadings,Wit
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $event->sheet->getColumnDimension('C')->setAutoSize(false)->setWidth(10);
-                $event->sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(15);
-                $event->sheet->getColumnDimension('H')->setAutoSize(false)->setWidth(20);
+                $event->sheet->getColumnDimension('G')->setAutoSize(false)->setWidth(15);
+                $event->sheet->getColumnDimension('D')->setAutoSize(false)->setWidth(30);
             }
         ];
     }
