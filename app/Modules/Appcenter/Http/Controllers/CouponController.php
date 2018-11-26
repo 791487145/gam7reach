@@ -88,6 +88,7 @@ class CouponController extends BaiscController{
             'coupon_t_eachlimit'=>$request->input('coupon_t_eachlimit'),
             'coupon_t_desc'=>$request->input('coupon_t_desc')."\n优惠内容：{$limit} 减免{$request->input('coupon_t_price')}",
             'coupon_t_add_date'=>time(),
+            'use_range'=>$request->input('use_range'),
         );
         if($insert_array['coupon_t_end_date']<=$insert_array['coupon_t_start_date']){
             return $this->failed('结束时间必须大于开始时间');
@@ -131,6 +132,10 @@ class CouponController extends BaiscController{
         if(!$coupon_t_id){
             return $this->failed('优惠券id不能为空');
         }
-
+        $coupon_info=CouponTemplate::with()->where('coupon_t_id',$coupon_t_id)->get();
+        if($coupon_info){
+            return $this->success($coupon_info);
+        }
+        return $this->failed('无此优惠券');
     }
 }

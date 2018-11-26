@@ -66,7 +66,8 @@ class CouponTemplate extends Eloquent
 		'coupon_t_add_date',
 		'coupon_t_eachlimit',
 		'coupon_t_style',
-		'coupon_t_recommend'
+		'coupon_t_recommend',
+        'use_range',
 	];
 	/*
 	 * 优惠券旗舰店关联
