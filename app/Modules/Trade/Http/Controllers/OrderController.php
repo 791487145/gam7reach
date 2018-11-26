@@ -21,7 +21,8 @@ class OrderController extends BaiscController
     public function orderList(Request $request)
     {
         $orders = new Order();
-        $param = $request->only('store_id','order_sn','add_time','order_state','');
+        $param = $request->only('store_id','order_sn','start_time','order_state','shipping_type','payment_code','order_type','page','limit','end_time');
+        $orders = Order::order($orders,$param);
 
         $data = array(
             //'company' => $company

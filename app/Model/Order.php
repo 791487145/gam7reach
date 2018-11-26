@@ -2,13 +2,12 @@
 
 /**
  * Created by Reliese Model.
- * Date: Wed, 14 Nov 2018 01:51:17 +0000.
+ * Date: Mon, 26 Nov 2018 09:28:16 +0000.
  */
 
 namespace App\Model;
 
 use Reliese\Database\Eloquent\Model as Eloquent;
-
 
 /**
  * App\Model\Order
@@ -37,20 +36,23 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property int $order_state 订单状态：0(已取消)10(默认):未付款;20:已付款;30:已发货;40:已收货;50:退款中
  * @property bool|null $refund_state 退款状态:0是无退款,1是部分退款,2是全部退款
  * @property bool|null $lock_state 锁定状态:0是正常,大于0是锁定,默认是0
- * @property int $delete_state 删除状态0未删除1放入回收站2彻底删除
+ * @property string|null $deleted_at
  * @property float|null $refund_amount 退款金额
  * @property int|null $delay_time 延迟时间,默认为0
  * @property string|null $shipping_code 物流单号
  * @property int $shipping_type 物流方式0物流配送；1到店自提
+ * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\App\Model\Order onlyTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order query()
+ * @method static bool|null restore()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereAddTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereBuyerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereBuyerName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereCompanyId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereDelayTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereDeleteState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereDeletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereEvaluationState($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereFinnshedTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereGoodsAmount($value)
@@ -74,10 +76,13 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereShopName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereStoreId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Order whereStoreName($value)
+ * @method static \Illuminate\Database\Query\Builder|\App\Model\Order withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\App\Model\Order withoutTrashed()
  * @mixin \Eloquent
  */
 class Order extends Eloquent
 {
+	use \Illuminate\Database\Eloquent\SoftDeletes;
 	protected $table = '7r_order';
 	protected $primaryKey = 'order_id';
 	public $timestamps = false;
@@ -103,7 +108,6 @@ class Order extends Eloquent
 		'order_state' => 'int',
 		'refund_state' => 'bool',
 		'lock_state' => 'bool',
-		'delete_state' => 'int',
 		'refund_amount' => 'float',
 		'delay_time' => 'int',
 		'shipping_type' => 'int'
@@ -133,10 +137,41 @@ class Order extends Eloquent
 		'order_state',
 		'refund_state',
 		'lock_state',
-		'delete_state',
 		'refund_amount',
 		'delay_time',
 		'shipping_code',
 		'shipping_type'
 	];
+
+	static function order($orders,$param)
+    {
+        if(!empty($param['store_id'])){
+            if($param['store_id'] == 999){
+
+            }else{
+                $orders = $orders->whereStoreId($param['store_id']);
+            }
+        }
+        if(!empty($param['order_sn'])){
+            $orders = $orders->whereOrderSn($param['order_sn']);
+        }
+        if(!empty($param['order_state'])){
+            $orders = $orders->whereOrderState($param['order_state']);
+        }
+        if(!empty($param['start_time'])){
+            $orders = $orders->where('add_time','>=',strtotime($param['start_time']));
+        }
+        if(!empty($param['end_time'])){
+            $orders = $orders->where('add_time','<=',strtotime($param['end_time']));
+        }
+        if(!empty($param['shipping_type'])){
+            $orders = $orders->whereShippingType($param['shipping_type']);
+        }
+        if(!empty($param['payment_code'])){
+            $orders = $orders->wherePaymentCode($param['payment_code']);
+        }
+        if(!empty($param['order_type'])){
+            $orders = $orders->whereOrderType($param['order_type']);
+        }
+    }
 }
