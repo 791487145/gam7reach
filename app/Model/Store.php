@@ -90,7 +90,7 @@ class Store extends Eloquent
 		'company_id' => 'int',
 		'reg_id' => 'int',
 		'store_recommend' => 'int',
-		'store_state' => 'bool',
+		'store_state' => 'int',
 		'store_sort' => 'int',
 		'store_collect' => 'int',
 		'store_sales' => 'int',
@@ -141,5 +141,25 @@ class Store extends Eloquent
             self::STORE_STATE_OPEN => '开店'
         );
         return $param[$status];
+    }
+
+    static function addressCN($address)
+    {
+        $address = json_decode($address,true);
+        $province = Area::whereAreaId($address['province'])->value('area_name');
+        $city = Area::whereAreaId($address['city'])->value('area_name');
+        $area = Area::whereAreaId($address['area'])->value('area_name');
+        //dd($province);
+        return $province.$city.$area;
+    }
+
+    public function regision_manage()
+    {
+        return $this->hasOne(RegisionManager::class,'id','reg_id');
+    }
+
+    public function empoly()
+    {
+        return $this->hasOne(Employ::class,'id','store_manager_id');
     }
 }

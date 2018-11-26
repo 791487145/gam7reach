@@ -17,7 +17,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 Route::prefix('upload')->group(function(){
-    //上传商品图片
+
     Route::post('goods','UploadController@goodsPicUpload')->name('uploadGoods');
+
+    Route::post('store', 'UploadController@storeLogo');
+    Route::post('company', 'UploadController@companyAvater');
 });
+
+
+

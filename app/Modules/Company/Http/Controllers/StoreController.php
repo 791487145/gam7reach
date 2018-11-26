@@ -2,6 +2,7 @@
 
 namespace App\Modules\Company\Http\Controllers;
 
+use App\Exports\StoreExport;
 use App\Http\Controllers\BaiscController;
 use App\Model\Area;
 use App\Model\Company;
@@ -11,9 +12,17 @@ use Cache;
 use App\Model\RegisionManager;
 use App\Model\Store;
 use Illuminate\Http\Request;
+use UUID;
 
 class StoreController extends BaiscController
 {
+    protected $preinstall_role;
+    public function __construct()
+    {
+        parent::__construct();
+        $role = auth('employ')->user()->role;
+        $this->preinstall_role = $role->preinstall_role;
+    }
 
     /**
      * 企业
@@ -25,6 +34,14 @@ class StoreController extends BaiscController
         $stores = new Store();
         $stores = $stores->whereCompanyId($this->company_id);
         $regions = RegisionManager::whereCompanyId($this->company_id)->select('id','name')->get();
+        $employ = auth('employ')->user();
+
+        if($this->preinstall_role == $this->region){
+            $stores = $stores->whereNotIn('id',explode(',',$employ->store_id));
+        }
+        if($this->preinstall_role == $this->shoper){
+            $stores = $stores->whereStoreId($employ->shop_id);
+        }
 
         $param = $request->only('reg_id','store_name','store_state');
         if(!empty($param['store_state'])){
@@ -33,7 +50,7 @@ class StoreController extends BaiscController
         if(!empty($param['reg_id'])){
             $stores = $stores->whereRegId($param['reg_id']);
         }
-        if(!empty($param['store_state'])){
+        if(!empty($param['store_name'])){
             $stores = $stores->where('store_name','like','%'.$param['store_name'].'%');
         }
 
@@ -42,6 +59,11 @@ class StoreController extends BaiscController
         foreach ($stores as $store){
             $store->reg_name = RegisionManager::whereId($store->id)->value('name');
             $store->store_state_name = Store::stateCN($store->store_state);
+            $store->store_manager_name = '';
+            if(Employ::whereId($store->store_manager_id)->exists()){
+                $store->store_manager_name = $store->empoly()->first()->name;
+            }
+            $store->store_detail_add = Store::addressCN($store->area_info).$store->store_address;
         }
 
         $data = array(
@@ -50,6 +72,17 @@ class StoreController extends BaiscController
             'regions' => $regions
         );
         return $this->success($data);
+    }
+
+    public function storesExport(Request $request,StoreExport $storeExport)
+    {
+        $param = array(
+            'store_state' => $request->get('store_state',''),
+            'reg_id' => $request->get('reg_id',''),
+            'store_name' => $request->get('store_name',''),
+            'company_id' => $request->get('company_id',1),
+        );
+        return $storeExport->withParam($param);
     }
 
     /**
@@ -74,15 +107,17 @@ class StoreController extends BaiscController
         $store->company_id = $this->company_id;
         $store->store_photo = $request->post('store_photo');
         $store->store_description = $request->post('store_description');
-        $store->save();
+        //$store->save();
 
         $store_zip = $request->post('store_zip','');
-        if(empty($store_zip)){
-            $store_zip = date("ymdHis") . sprintf("%03d", substr($store->id, -3));
+        if(empty($store_zip) || Store::whereCompanyId($this->company_id)->whereStoreZip($store_zip)->exists()){
+            $store_zip = Uuid::generate()->string;
         }
 
-        $store->store_name = $store_zip;
+        $store->store_zip = $store_zip;
         $store->save();
+
+        Employ::whereId($store->store_manager_id)->update(['shop_id' => $store->id]);
         return $this->created('添加成功');
     }
 
@@ -111,13 +146,15 @@ class StoreController extends BaiscController
 
         $param = $request->only('name','work_no');
         if(!empty($param['name'])){
+
             $employ_store_mamages = $employ_store_mamages->where('name','like','%'.$param['name'].'%');
         }
         if(!empty($param['work_no'])){
+
             $employ_store_mamages = $employ_store_mamages->whereWorkNo($param['work_no']);
         }
 
-        $employ_store_mamages = $employ_store_mamages->whereRoleId($role_id)->whereStatus(Employ::STATUS_FORBBIN)->forPage($request->post('page',1),$request->post('limit',self::LIMIT))
+        $employ_store_mamages = $employ_store_mamages->whereRoleId($role_id)->whereStatus(Employ::STATUS_NORMAL)->forPage($request->post('page',1),$request->post('limit',self::LIMIT))
                               ->select('id','name','mobile','sex')->get();
 
         $employ_store_mamages = Employ::employCN($employ_store_mamages);

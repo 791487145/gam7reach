@@ -102,7 +102,7 @@ trait ApiResponses
      */
     public function created($message = "created")
     {
-        return $this->setStatusCode(FoundationResponse::HTTP_CREATED)
+        return $this->setStatusCode(FoundationResponse::HTTP_OK)
             ->message($message);
 
     }

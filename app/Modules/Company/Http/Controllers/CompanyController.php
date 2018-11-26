@@ -5,6 +5,7 @@ namespace App\Modules\Company\Http\Controllers;
 use App\Http\Controllers\BaiscController;
 use App\Model\Area;
 use App\Model\Company;
+use App\Model\MainCategory;
 use Illuminate\Http\Request;
 use Cache;
 
@@ -19,11 +20,10 @@ class CompanyController extends BaiscController
     public function company(Request $request)
     {
         $company = Company::whereId($this->company_id)->first();
-        $areas = Cache::get('areas');
+        $company->category_name = MainCategory::whereId($company->category_id)->value('name');
 
         $data = array(
-            '$areas' => $areas,
-            'employs' => $company
+            'company' => $company
         );
         return $this->success($data);
     }

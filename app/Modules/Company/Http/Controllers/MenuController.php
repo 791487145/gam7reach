@@ -49,7 +49,7 @@ class MenuController extends BaiscController
     public function menuUpdate(Request $request)
     {
         $param = $request->only('name','url','title');
-        $menu = Menus::whereId($request->post('parent_id'))->first();
+        $menu = Menus::whereId($request->post('menu_id'))->first();
         $menu->update($param);
         return $this->message('修改成功');
     }

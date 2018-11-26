@@ -60,6 +60,7 @@ class ShoppingGuide extends Eloquent
 {
 	protected $table = '7r_shopping_guide';
 	protected $primaryKey = 'sg_id';
+	protected $dateFormat = "U";
 
 	//sex
 	const SEX_BOY = 1;
@@ -118,5 +119,10 @@ class ShoppingGuide extends Eloquent
         }
 
         return $shoppingGuide;
+    }
+
+    public function store()
+    {
+        return $this->hasOne(Store::class,'store_id','store_id');
     }
 }

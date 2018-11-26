@@ -20,6 +20,7 @@ class MemberController extends BaiscController{
      * 会员列表
      */
     public function list(Request $request,Member $member){
+
         $member_list=$member->getList($request,$this->company_id,$this->store_id);
         $data['member_count']=$member_list->count();
         $data['member']=$member_list;

@@ -39,16 +39,16 @@ class EmployExport implements Responsable,FromQuery,WithMapping,WithHeadings,Wit
     {
         $employ = Employ::whereCompanyId($this->company_id);
         if(!empty($this->role_id)){
-            $employ = Employ::whereRoleId($this->role_id);
+            $employ = $employ->whereRoleId($this->role_id);
         }
         if(!empty($this->department_id)){
-            $employ = Employ::whereDepartmentId($this->department_id);
+            $employ = $employ->whereDepartmentId($this->department_id);
         }
         if(!empty($this->work_no)){
-            $employ = Employ::whereRoleId($this->work_no);
+            $employ = $employ->whereRoleId($this->work_no);
         }
         if(!empty($this->mobile)){
-            $employ = Employ::whereRoleId($this->mobile);
+            $employ = $employ->whereRoleId($this->mobile);
         }
         $employ = $employ->with('role','department');
         return $employ;
@@ -93,9 +93,8 @@ class EmployExport implements Responsable,FromQuery,WithMapping,WithHeadings,Wit
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $event->sheet->getColumnDimension('C')->setAutoSize(false)->setWidth(10);
-                $event->sheet->getColumnDimension('E')->setAutoSize(false)->setWidth(15);
-                $event->sheet->getColumnDimension('H')->setAutoSize(false)->setWidth(20);
+                $event->sheet->getColumnDimension('G')->setAutoSize(false)->setWidth(15);
+                $event->sheet->getColumnDimension('D')->setAutoSize(false)->setWidth(30);
             }
         ];
     }

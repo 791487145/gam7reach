@@ -37,6 +37,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 class RegisionManager extends Eloquent
 {
 	protected $table = '7r_regision_manager';
+	protected $dateFormat = 'U';
 
 	protected $casts = [
 		'reg_employ_id' => 'int',

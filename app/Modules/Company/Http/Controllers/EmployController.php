@@ -16,8 +16,6 @@ use Illuminate\Http\Request;
 
 class EmployController extends BaiscController
 {
-    //protected $preinstall_role;
-
     /**
      * 员工列表
      * @param Request $request
@@ -25,26 +23,27 @@ class EmployController extends BaiscController
      */
     public function employsList(Request $request,Employ $employ)
     {
-        $departments = Department::whereCompanyId($this->company_id)->select('id','dep_name')->get();
-        $roles = Role::whereCompanyId($this->company_id)->where('preinstall_role','<',$this->guide)->select('id','role_name')->forPage($request->post('page',1),$request->post('limit',self::LIMIT))->get();
+       /* $departments = Department::whereCompanyId($this->company_id)->select('id','dep_name')->get();
+        $roles = Role::whereCompanyId($this->company_id)->where('preinstall_role','<',$this->guide)->select('id','role_name')->get();*/
         $param = $request->only('page','limit','work_no','mobile','department_id','role_id');
 
         $employs = Employ::employList($employ,$this->company_id,$param);
 
         $data = array(
             'count' => count($employs),
-            'departments' => $departments,
-            'roles' => $roles,
             'employs' => $employs
         );
         return $this->success($data);
     }
 
-
+    /**
+     * 创建展示
+     * @return mixed
+     */
     public function employCreateShow()
     {
         $departments = Department::whereCompanyId($this->company_id)->select('id','dep_name')->get();
-        $roles = Role::whereCompanyId($this->company_id)->select('id','role_name')->get();
+        $roles = Role::whereCompanyId($this->company_id)->where('preinstall_role','<',$this->guide)->select('id','role_name')->get();
         $stores = Store::whereCompanyId($this->company_id)->select('store_id','store_name')->get();
 
         $data = array(
@@ -115,13 +114,13 @@ class EmployController extends BaiscController
 
 
     /**
-     * 角色修改
+     * 员工修改
      * @param Request $request
      * @return mixed
      */
     public function employUpdate(Request $request)
     {
-        $employ = Employ::whereId($request->post('role_id'))->first();
+        $employ = Employ::whereId($request->post('employ_id'))->first();
 
         $param = array(
             'name' => $request->post('name'),
@@ -132,17 +131,16 @@ class EmployController extends BaiscController
             'status' => $request->post('status'),
             'shop_id' => $request->post('shop_id',0)
         );
-        $employ->update($param);
 
         $work_no = $request->post('work_no','');
         if(empty($work_no)){
             return $this->failed('工号不能为空');
         }
 
-        if(Employ::whereWorkNo($work_no)->whereCompanyId($this->company_id)->exists()){
+        if(Employ::whereWorkNo($work_no)->where('id','!=',$employ->id)->whereCompanyId($this->company_id)->exists()){
             return $this->failed('当前工号已存在');
         };
-
+        $employ->update($param);
         $employ->update(['work_no' => $work_no]);
         return $this->message('修改成功');
     }
@@ -158,15 +156,9 @@ class EmployController extends BaiscController
         if(is_null($employ)){
             return $this->failed('当前员工不存在');
         }
-        $departments = Department::whereCompanyId($this->company_id)->select('id','dep_name')->get();
-        $roles = Role::whereCompanyId($this->company_id)->select('id','role_name')->get();
-        $stores = Store::whereCompanyId($this->company_id)->select('store_id','store_name')->get();
 
         $data = array(
-            'employ' => $employ,
-            'departments' => $departments,
-            'roles' => $roles,
-            'stores' => $stores
+            'employ' => $employ
         );
         return $this->success($data);
     }
@@ -199,7 +191,7 @@ class EmployController extends BaiscController
             'department_id' => $request->get('department_id',''),
             'work_no' => $request->get('work_no',''),
             'mobile' => $request->get('mobile',''),
-            'company_id' => $request->get('company_id',1),
+            'company_id' => $this->company_id,
         );
         return $employExport->withParam($param);
     }

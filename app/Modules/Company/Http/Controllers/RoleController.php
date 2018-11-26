@@ -18,8 +18,6 @@ class RoleController extends BaiscController
      */
     public function roleList(Request $request)
     {
-        $menus = Menus::defaultOrder()->get()->toTree();
-
         $roles = Role::whereCompanyId($this->company_id)->select('id','role_name','descripe')
                  ->forPage($request->post('page',1),$request->post('limit',self::LIMIT))->get();
         foreach ($roles as $role)
@@ -29,10 +27,15 @@ class RoleController extends BaiscController
 
         $data = array(
             'count' => count($roles),
-            'menus' => $menus,
             'roles' => $roles
         );
         return $this->success($data);
+    }
+
+    public function roleMenu()
+    {
+        $menus = Menus::defaultOrder()->get()->toTree();
+        return $this->success($menus);
     }
 
     /**
@@ -64,7 +67,7 @@ class RoleController extends BaiscController
     {
         $role = Role::whereId($request->post('role_id'))->select('id','role_name','descripe','limits')->first();
         $menu_id = explode(',',$role->limits);
-        $menus = Menus::whereIn($menu_id)->defaultOrder()->get()->toTree();
+        $menus = Menus::whereIn('id',$menu_id)->defaultOrder()->get()->toTree();
 
         $data = array(
            'role' => $role,
@@ -111,12 +114,9 @@ class RoleController extends BaiscController
         if(is_null($role)){
             return $this->failed('暂无角色');
         }
-        //$menu_id = explode(',',$role->limits);
-        $menus = Menus::defaultOrder()->get()->toTree();
 
         $data = array(
             'role' => $role,
-            'menus' => $menus
         );
         return $this->success($data);
     }
@@ -132,8 +132,11 @@ class RoleController extends BaiscController
         if(is_null($role)){
             return $this->failed('暂无角色');
         }
-        if($role->preinstall_role){
-            return $this->failed('系统角色不能修改');
+        if($role->preinstall_role <= $this->guide){
+            return $this->failed('系统角色不能删除');
+        }
+        if(Employ::whereRoleId($role->id)->exists()){
+            return $this->failed('角色下有管理员存在，不能删除');
         }
         $role->delete();
         return $this->message('删除成功');
