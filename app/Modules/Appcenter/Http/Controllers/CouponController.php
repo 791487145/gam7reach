@@ -9,7 +9,6 @@ namespace App\Modules\Appcenter\Http\Controllers;
 use App\Http\Controllers\BaiscController;
 use App\Model\CompanyService;
 use App\Model\CouponTemplate;
-use App\Model\Employ;
 use App\Model\Store;
 use App\Model\WebShop;
 use Illuminate\Http\Request;
