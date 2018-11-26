@@ -131,6 +131,6 @@ class CouponController extends BaiscController{
         if(!$coupon_t_id){
             return $this->failed('优惠券id不能为空');
         }
-        
+
     }
 }
