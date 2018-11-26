@@ -20,8 +20,11 @@ class MemberController extends BaiscController{
      * 会员列表
      */
     public function list(Request $request,Member $member){
-        $member_list=$member->getList($request,$this->company_id);
-        return $this->success($member_list);
+
+        $member_list=$member->getList($request,$this->company_id,$this->store_id);
+        $data['member_count']=$member_list->count();
+        $data['member']=$member_list;
+        return $this->success($data);
     }
     /*
      * 添加会员
@@ -94,24 +97,27 @@ class MemberController extends BaiscController{
         }
         $member_id=$request->input('member_id');
         if($member_id){
-            $member_info=Member::with(['grade'=>function($query){
-                $query->select(['grade_id','grade_name']);
-            },'tags'=>function($query){
+            $whereIn='0=0';
+            if($this->store_id){
+                $whereIn="where in ($this->store_id)";
+            }
+            $member_info=Member::with(['tags'=>function($query){
                 $query->select(['tag_id','mtag_name']);
-            },'store'])->find($member_id);
+            }])->find($member_id);
             //获取启用的会员等级列表
             $member_grades=MemberGrade::Enable()->where('company_id',$this->company_id)
                 ->select(['grade_id','grade_name'])->get();
-            $member_info['member_grade']=$member_grades;
             //获取会员标签
             $member_tags=MemberTag::where('company_id',$this->company_id)
                 ->select(['tag_id','mtag_name'])->get();
-            $member_info['member_tags']=$member_tags;
             //获取全部门店
             $store_list=Store::where(['company_id'=>$this->company_id,'store_state'=>1])
-                ->select(['store_id','store_name'])->get();
-            $member_info['store_all']=$store_list;
-            return $this->success($member_info);
+                ->whereRaw($whereIn)->select(['store_id','store_name'])->get();
+            $data['member']=$member_info;
+            $data['member_grades']=$member_grades;
+            $data['member_tags']=$member_tags;
+            $data['stores']=$store_list;
+            return $this->success($data);
 
         }
         return $this->failed('会员id不能为空');

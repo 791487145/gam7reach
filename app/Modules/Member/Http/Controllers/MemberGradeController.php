@@ -121,6 +121,7 @@ class MemberGradeController extends BaiscController{
             $grade_info=MemberGrade::find($grade_id);
             if($grade_info){
                 $grade_info->grade_rights=unserialize($grade_info->grade_rights);
+                $grade_info->grade_level=intval(substr($grade_info->grade_level,'3'));
                 return $this->success($grade_info);
             }
             return $this->failed('无此等级');

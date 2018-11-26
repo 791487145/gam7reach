@@ -89,6 +89,7 @@ class Employ extends Authenticatable implements JWTSubject
 		'shop_id',
 		'sex',
 		'status',
+        'store_id',
 		'role_id'
 	];
 

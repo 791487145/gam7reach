@@ -19,7 +19,7 @@ class BaiscController extends BascController
     public $region = 2;//区经
     public $shoper = 3;//店长
     public $guide = 4;//导购
-    public $store_id;//门店id
+    public $store_id;//门店id字符串
     public function __construct()
     {
         $this->middleware(function ($request, $next) {
@@ -32,7 +32,7 @@ class BaiscController extends BascController
             }
 
             $this->company_id = $employ->company_id;
-            $this->store_id = $employ->commpany_id;
+            $this->store_id = $employ->store_id;
             return $next($request);
         });
     }

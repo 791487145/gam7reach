@@ -8,6 +8,7 @@
 namespace App\Modules\Goods\Http\Controllers;
 use App\Http\Controllers\BaiscController;
 use App\Model\Goods;
+use App\Model\GoodsGroup;
 use App\Model\ShopGood;
 use App\Model\StoreGood;
 use App\Model\WebShop;
@@ -25,28 +26,30 @@ class GoodsController extends BaiscController
      */
     public function goodsList(Request $request,Goods $goods){
         $goods_list=$goods->getList($request,$this->company_id);
-        return $this->success($goods_list);
+        $data['goods_count']=$goods_list->count();
+        $data['goods']=$goods_list;
+        return $this->success($data);
     }
     /*
      * 只查询上架的商品
      */
     public function onlineGoods(Request $request){
-        $list=Goods::upShelves()->where('company_id',$this->company_id)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get()->toArray();
-        $goods_list=array();
-        foreach ($list as  $key=>$goods){
-            $goods_list[$key]=$goods;
-            $goods_list[$key]['goods_state']=$goods['goods_state']?'上架':'下架';
-            $goods_list[$key]['goods_addtime']=date('Y-m-d H:i:s',$goods['goods_addtime']);
-            $goods_list[$key]['goods_edittime']=date('Y-m-d H:i:s',$goods['goods_edittime']);
-        }
-        return $this->success($goods_list);
+        $list=Goods::upShelves()->where('company_id',$this->company_id)->forPage($request->input('page',1),$request->input('limit',BaiscController::LIMIT))->get();
+        $list->each(function($item,$key){
+            $item->goods_state=$item->goods_state?'上架':'下架';
+        });
+        $data['goods_count']=$list->count();
+        $data['online_goods']=$list;
+        return $this->success($data);
     }
     /*
      * 旗舰店商品池
      */
     public function shopGoodsList(Request $request,ShopGood $shopGood){
         $goods_list=$shopGood->getList($request,$this->company_id);
-        return $this->success($goods_list);
+        $data['shop_goods_count']=$goods_list->count();
+        $data['shop_goods']=$goods_list;
+        return $this->success($data);
     }
     /*
      * 云店商品池
@@ -56,7 +59,9 @@ class GoodsController extends BaiscController
             return $this->failed('云店id为空');
         }
         $goods_list=$storeGood->getList($request,$this->company_id);
-        return $this->success($goods_list);
+        $data['store_goods_count']=$goods_list->count();
+        $data['store_goods']=$goods_list;
+        return $this->success($data);
     }
     /*
      * 商品类目
@@ -102,7 +107,7 @@ class GoodsController extends BaiscController
             'goods_shop_price.required'=>'旗舰店售价不能为空',
             'goods_storage.required'=>'商品库存不能为空',
             'goods_storage.numeric'=>'库存必须为数字',
-            'is_points.required'=>'积分抵扣不能为空',
+
         );
         $validator = Validator::make($request->all(), [
             'goods_id' => ['required',
@@ -112,7 +117,7 @@ class GoodsController extends BaiscController
                 ],
             'goods_shop_price'=>'required',
             'goods_storage'=>'required|numeric',
-            'is_points'=>'required'
+
         ],$message);
         if ($validator->fails()) {
             return $this->failed($validator->errors()->first());
@@ -137,7 +142,6 @@ class GoodsController extends BaiscController
             'goods_store_price.required'=>'云店售价不能为空',
             'goods_storage.required'=>'商品库存不能为空',
             'goods_storage.numeric'=>'库存必须为数字',
-            'is_points.required'=>'积分抵扣不能为空',
             'store_id.required'=>'请指定所属门店'
         );
         $validator = Validator::make($request->all(), [
@@ -148,7 +152,6 @@ class GoodsController extends BaiscController
             ],
             'goods_store_price'=>'required',
             'goods_storage'=>'required|numeric',
-            'is_points'=>'required',
             'store_id'=>'required'
         ],$message);
         if ($validator->fails()) {
@@ -191,11 +194,15 @@ class GoodsController extends BaiscController
 
         }
         $goods_id=$request->input('goods_id');
-        $goods=$goods->with(['goods_class','goods_group','goods_images'])->find($goods_id);
+        $goods=$goods->with(['goods_images'])->find($goods_id);
+        $goods_group=GoodsGroup::where('company_id',$this->company_id)->get();
+        $data=array();
         if($goods){
+            $data['goods']=$goods;
             $goods_class=GoodsClass::all()->toTree();
-            $goods['goods_all_class']=$goods_class;
-            return $this->success($goods);
+            $data['goods_groups']=$goods_group;
+            $data['goods_all_class']=$goods_class;
+            return $this->success($data);
         }
         return $this->failed('无此商品');
 
@@ -211,15 +218,12 @@ class GoodsController extends BaiscController
                 'goods_shop_price.numeric'=>'商品价格必须是数字',
                 'goods_storage.required'=>'商品库存不能为空',
                 'goods_storage.numeric'=>'库存必须为数字',
-                'is_points.required'=>'积分抵扣不能为空',
-                'goods_state.required'=>'商品状态不能为空',
             );
             $validator = Validator::make($request->all(), [
                 'shop_goods_id'=>'required',
                 'goods_shop_price'=>'required|numeric',
                 'goods_storage'=>'required|numeric',
-                'is_points'=>'required',
-                'goods_state'=>'required',
+
             ],$message);
             if ($validator->fails()) {
                 return $this->failed($validator->errors()->first());
@@ -247,15 +251,11 @@ class GoodsController extends BaiscController
                 'goods_store_price.numeric'=>'商品价格必须是数字',
                 'goods_storage.required'=>'商品库存不能为空',
                 'goods_storage.numeric'=>'库存必须为数字',
-                'is_points.required'=>'积分抵扣不能为空',
-                'goods_state.required'=>'商品状态不能为空'
             );
             $validator = Validator::make($request->all(), [
                 'store_goods_id'=>'required',
                 'goods_store_price'=>'required|numeric',
                 'goods_storage'=>'required|numeric',
-                'is_points'=>'required',
-                'goods_state'=>'required'
             ],$message);
             if ($validator->fails()) {
                 return $this->failed($validator->errors()->first());

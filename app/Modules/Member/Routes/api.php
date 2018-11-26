@@ -27,6 +27,17 @@ Route::prefix('/member')->group(function(){
         Route::post('/delete','MemberGradeController@delete')->name('memberGradeDelete');
 
     });
+    //会员标签分组
+    Route::prefix('tag')->group(function(){
+        //标签列表
+        Route::post('list','MemberTagController@list')->name('memberTag');
+        //添加标签
+        Route::post('add','MemberTagController@add')->name('memberTagAdd');
+        //编辑标签
+        Route::match(['get','post'],'edit','MemberTagController@edit')->name('memberTagEdit');
+        //删除标签
+        Route::post('delete','MemberTagController@delete')->name('memberTagDelete');
+    });
     //会员列表
     Route::post('list','MemberController@list')->name('memberList');
     //添加会员
