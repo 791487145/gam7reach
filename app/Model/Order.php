@@ -143,8 +143,9 @@ class Order extends Eloquent
 		'shipping_type'
 	];
 
-	static function order($orders,$param)
+	static function order($orders,$param,$company_id)
     {
+        $orders = $orders->whereCompanyId($company_id);
         if(!empty($param['store_id'])){
             if($param['store_id'] == 999){
 

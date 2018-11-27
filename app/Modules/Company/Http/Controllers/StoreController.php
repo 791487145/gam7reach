@@ -92,17 +92,11 @@ class StoreController extends BaiscController
      */
     public function storesCreate(Request $request)
     {
-        $param = array(
-            'province' => $request->post('province'),
-            'city' => $request->post('city'),
-            'area' => $request->post('area')
-        );
-
         $store = new Store();
         $store->store_name = $request->post('store_name');
         $store->store_phone = $request->post('store_phone');
         $store->store_address = $request->post('store_address');
-        $store->area_info = json_encode($param);
+        $store->area_info = $request->post('area_info');
         $store->store_manager_id = $request->post('store_manager_id');
         $store->company_id = $this->company_id;
         $store->store_photo = $request->post('store_photo');

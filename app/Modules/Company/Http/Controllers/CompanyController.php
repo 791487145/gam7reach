@@ -46,12 +46,7 @@ class CompanyController extends BaiscController
             $company->update(['telphone' => $request->post('telphone')]);
         }
         if($request->post('company_address','')){
-            $param = array(
-                'province' => $request->post('province'),
-                'city' => $request->post('city'),
-                'area' => $request->post('area')
-            );
-            $company->update(['area_info' => json_encode($param),'company_address' => $request->post('company_address')]);
+            $company->update(['area_info' => $request->post('area_info'),'company_address' => $request->post('company_address')]);
         }
 
         return $this->message('修改成功');
