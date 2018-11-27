@@ -28,5 +28,7 @@ Route::prefix('app')->group(function(){
         Route::post('add','CouponController@add')->name('couponAdd');
         //编辑优惠卷
         Route::match(['get','post'],'edit','CouponController@edit')->name('couponEdit');
+        //优惠券推广
+
     });
 });
