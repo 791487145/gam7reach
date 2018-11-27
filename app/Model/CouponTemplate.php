@@ -38,7 +38,7 @@ class CouponTemplate extends Eloquent
 	public $timestamps = false;
 
 	protected $casts = [
-		'company_id' => 'int',
+		'coupon_t_id' => 'int',
 		'coupon_t_start_date' => 'datetime:Y-m-d H:i',
 		'coupon_t_end_date' => 'datetime:Y-m-d H:i',
 		'coupon_t_price' => 'float',
@@ -52,8 +52,9 @@ class CouponTemplate extends Eloquent
 	];
 
 	protected $fillable = [
-		'company_id',
+		'coupon_t_id',
 		'coupon_t_title',
+        'company_id',
 		'coupon_t_desc',
 		'coupon_t_start_date',
 		'coupon_t_end_date',
@@ -73,13 +74,13 @@ class CouponTemplate extends Eloquent
 	 * 优惠券旗舰店关联
 	 */
 	public function shop(){
-	    return $this->belongsToMany(CouponShop::class,'7r_coupon_shop','coupon_t_id','shop_id');
+	    return $this->belongsToMany(WebShop::class,'7r_coupon_shop','coupon_t_id','shop_id');
     }
     /*
      * 优惠券云店关联
      */
     public function store(){
-        return $this->belongsToMany(CouponStore::class,'7r_coupon_store','coupon_t_id','store_id');
+        return $this->belongsToMany(Store::class,'7r_coupon_store','coupon_t_id','store_id');
     }
     /*
      * 优惠券列表
@@ -95,6 +96,7 @@ class CouponTemplate extends Eloquent
         $list=$this->where($where)->forPage($request->input('page',1),$request->input('limit',10))->get();
         $list->each(function ($item,$key){
             $item->coupon_t_state=$item->coupon_t_state?'有效':'过期';
+            $item->use_range=$item->use_range?"全部店铺":'指定店铺';
             $limit=$item->coupon_t_limit?"订单满{$item->coupon_t_limit}元,":'无门槛,';
             $item->pre_content="{$limit}减免金额：{$item->coupon_t_price}元";
         });

@@ -71,7 +71,7 @@ class CouponController extends BaiscController{
             'coupon_t_eachlimit'=>'required|numeric',
             'coupon_t_desc'=>'required'
 
-        ],$message,[]);
+        ],$message);
         if($validator->fails()){
             return $this->failed($validator->errors()->first());
         }
@@ -92,6 +92,7 @@ class CouponController extends BaiscController{
         if($insert_array['coupon_t_end_date']<=$insert_array['coupon_t_start_date']){
             return $this->failed('结束时间必须大于开始时间');
         };
+
         DB::beginTransaction();
         try{
             $coupon=CouponTemplate::create($insert_array);
@@ -102,6 +103,7 @@ class CouponController extends BaiscController{
                 if(empty($request->input('shop_id'))&&empty($request->input('store_id'))){
                     return $this->failed('请指定店铺');
                 }
+
                 $coupon->shop()->sync($request->input('shop_id'),false);
                 $coupon->store()->sync($request->input('store_id'),false);
             }elseif($request->input('use_range')==1){//如果是全部店铺
@@ -127,14 +129,95 @@ class CouponController extends BaiscController{
      * 编辑优惠券
      */
     public function edit(Request $request){
+        if($request->isMethod('post')){
+            $message=array(
+                'coupon_t_id.required'=>'优惠券id不能为空',
+                'coupon_t_title.required'=>'优惠券名称不能为空',
+                'coupon_t_title.max'=>'请勿超出9个字',
+                'coupon_t_total.required'=>'发放总量不能为空',
+                'coupon_t_total.numeric'=>'发放总量必须是数字',
+                'coupon_t_limit.required'=>'使用门槛不能为空',
+                'coupon_t_limit.numeric'=>'使用门槛必须是数字',
+                'coupon_t_price.required'=>'减免金额不能为空',
+                'coupon_t_price.numeric'=>'减免金额必须是数字',
+            );
+            $validator=Validator::make($request->all(),[
+                'coupon_t_id'=>'required',
+                'coupon_t_title'=>'required|max:9',
+                'coupon_t_total'=>'required|numeric',
+                'coupon_t_limit'=>'required|numeric',
+                'coupon_t_price'=>'required|numeric',
+
+            ],$message);
+            if($validator->fails()){
+                return $this->failed($validator->errors()->first());
+            }
+            $data=$request->all();
+            if(CouponTemplate::find($data['coupon_t_id'])->update($data)){
+                return $this->message('编辑优惠券成功');
+            }
+            return $this->failed('编辑优惠券失败');
+        }
         $coupon_t_id=$request->input('coupon_t_id');
         if(!$coupon_t_id){
             return $this->failed('优惠券id不能为空');
         }
-        $coupon_info=CouponTemplate::with()->where('coupon_t_id',$coupon_t_id)->get();
-        if($coupon_info){
-            return $this->success($coupon_info);
+        $coupon_info=CouponTemplate::where('coupon_t_id',$coupon_t_id)->get();
+        $coupon_info->each(function ($item,$key){
+            if($item->use_range==1){//全部店铺
+                $item->range_list=array('全部店铺');
+            }else{//指定店铺
+                $item->range_list=array(
+                    'shop_list'=>$item->shop()->select(['shop_name','shop_phone'])->get(),
+                    'store_list'=>$item->store()->select(['store_name','store_phone'])->get(),
+                );
+            }
+        });
+        return $this->success($coupon_info);
+    }
+    /*
+     * 优惠券适用店铺
+     */
+    public function rangeList(Request $request){
+        $range_type=$request->input('range_type'); //范围类型
+        $search_name=$request->input('search_name');//店铺名称
+        $data=array();
+        if($range_type==1){// 全部店铺
+            //旗舰店
+            $data['shop_list']=WebShop::where(['company_id'=>$this->company_id,'shop_state'=>1])
+                ->select(['shop_id','shop_name','shop_phone','shop_address'])->get();
+            //云店
+            $data['store_list']=Store::with(['empoly'=>function($query){
+                $query->select(['id','name','mobile']);
+            }])->where(['company_id'=>$this->company_id,'store_state'=>1])
+                ->select(['store_id','store_name','store_photo','store_address','store_manager_id'])->get();
+        }elseif ($range_type==2){//旗舰店
+            $where=array(
+                'company_id'=>$this->company_id,
+                'shop_state'=>1,
+            );
+            if($search_name){
+                $where['shop_name']=$search_name;
+            }
+            //旗舰店
+            $data['shop_list']=WebShop::where($where)
+                ->select(['shop_id','shop_name','shop_phone','shop_address'])->get();
+            $data['store_list']=array();
+        }else{ //云店
+            $where=array(
+                'company_id'=>$this->company_id,
+                'store_state'=>1,
+            );
+            if($search_name){
+                $where['store_name']=$search_name;
+            }
+            $data['shop_list']=array();
+            //云店
+            $data['store_list']=Store::with(['empoly'=>function($query){
+                $query->select(['id','name','mobile']);
+            }])->where($where)
+                ->select(['store_id','store_name','store_photo','store_address','store_manager_id'])->get();
         }
-        return $this->failed('无此优惠券');
+        return $this->success($data);
     }
 }

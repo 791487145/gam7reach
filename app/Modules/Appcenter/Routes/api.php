@@ -20,11 +20,13 @@ Route::get('/appcenter', function (Request $request) {
 Route::prefix('app')->group(function(){
     //优惠卷分组
     Route::prefix('coupon')->group(function(){
+        //优惠券适用店铺列表
+        Route::post('range_store','CouponController@rangeList')->name('range_store');
         //优惠券列表
         Route::post('list','CouponController@list')->name('couponList');
         //添加优惠券
         Route::post('add','CouponController@add')->name('couponAdd');
         //编辑优惠卷
-        Route::match(['get','post'],'CouponController@edit')->name('couponEdit');
+        Route::match(['get','post'],'edit','CouponController@edit')->name('couponEdit');
     });
 });

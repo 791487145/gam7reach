@@ -51,7 +51,6 @@ class WebShop extends Eloquent
 		'company_id' => 'int',
 		'reg_id' => 'int',
 		'shop_recommend' => 'int',
-		'shop_state' => 'bool',
 		'shop_collect' => 'int',
 		'shop_sales' => 'int',
 		'created_at' => 'int',
