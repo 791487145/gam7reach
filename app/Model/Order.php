@@ -87,6 +87,9 @@ class Order extends Eloquent
 	protected $primaryKey = 'order_id';
 	public $timestamps = false;
 
+	const ORDER_FLAG_SHOP = 0;
+	const ORDER_FLAG_STORE = 1;
+
 	protected $casts = [
 		'company_id' => 'int',
 		'order_flag' => 'int',
@@ -148,7 +151,7 @@ class Order extends Eloquent
         $orders = $orders->whereCompanyId($company_id);
         if(!empty($param['store_id'])){
             if($param['store_id'] == 999){
-
+                $orders = $orders->whereOrderFlag(self::ORDER_FLAG_SHOP);
             }else{
                 $orders = $orders->whereStoreId($param['store_id']);
             }
@@ -174,5 +177,28 @@ class Order extends Eloquent
         if(!empty($param['order_type'])){
             $orders = $orders->whereOrderType($param['order_type']);
         }
+
+        $orders = $orders->select('order_id','order_sn','add_time','order_state','order_type','payment_code','shipping_type','order_amount','order_flag')
+            ->forPage($param['page'],$param['limit'])->get();
+
+        foreach ($orders as $order){
+            if($order->order_flag == self::ORDER_FLAG_SHOP){
+                $order->goods = $order->shop_goods()->select('goods_name','goods_num')->get();
+            }else{
+                $order->goods = $order->store_goods()->select('goods_name','goods_num')->get();
+            }
+        }
+
+        return $orders;
+    }
+
+    public function shop_goods()
+    {
+        return $this->HasMany(OrderShopGood::class,'order_id','order_id');
+    }
+
+    public function store_goods()
+    {
+        return $this->hasMany(OrderStoreGood::class,'order_id','order_id');
     }
 }

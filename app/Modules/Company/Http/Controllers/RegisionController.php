@@ -50,7 +50,7 @@ class RegisionController extends BaiscController
     public function regisionCreateStoreShow(Request $request)
     {
         $stores = new Store();
-        $stores = $stores->whereCompanyId($this->company_id)->whereNull('reg_id');
+        $stores = $stores->whereCompanyId($this->company_id);
         $StoreName = $request->post('store_name','');
         if(!empty($StoreName)){
             $stores = $stores->where('store_name','like','%'.$StoreName.'%');
@@ -68,11 +68,11 @@ class RegisionController extends BaiscController
     public function regisionCreateEmployShow(Request $request)
     {
         $role = Role::whereCompanyId($this->company_id)->wherePreinstallRole($this->region)->first();
-        $reg_employ_id = RegisionManager::whereCompanyId($this->company_id)->pluck('reg_employ_id');
-        if(empty($reg_employ_id)){
+        //$reg_employ_id = RegisionManager::whereCompanyId($this->company_id)->pluck('reg_employ_id');
+        /*if(empty($reg_employ_id)){
             $reg_employ_id = array();
-        }
-        $employs = Employ::whereCompanyId($this->company_id)->whereNotIn('id',$reg_employ_id)->whereRoleId($role->id)->select('id','name')->get();
+        }*/
+        $employs = Employ::whereCompanyId($this->company_id)->whereRoleId($role->id)->select('id','name')->get();
         return $this->success($employs);
     }
 
@@ -132,6 +132,7 @@ class RegisionController extends BaiscController
         }
 
         Employ::whereId($reg_employ_id)->update(['store_id' => $store_id]);
+        Store::whereIn('store_id',explode(',',$regision->store_id))->update(['reg_id' => 0]);
         Store::whereIn('store_id',explode(',',$store_id))->update(['reg_id' => $regision->id]);
         DB::commit();
         return $this->message('修改成功');
