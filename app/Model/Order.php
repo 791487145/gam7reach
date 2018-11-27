@@ -146,8 +146,16 @@ class Order extends Eloquent
 		'shipping_type'
 	];
 
+    /**
+     * 订单列表
+     * @param $orders
+     * @param $param
+     * @param $company_id
+     * @return mixed
+     */
 	static function order($orders,$param,$company_id)
     {
+        dd(1);
         $orders = $orders->whereCompanyId($company_id);
         if(!empty($param['store_id'])){
             if($param['store_id'] == 999){
@@ -192,11 +200,12 @@ class Order extends Eloquent
         return $orders;
     }
 
+    //旗舰店商品
     public function shop_goods()
     {
         return $this->HasMany(OrderShopGood::class,'order_id','order_id');
     }
-
+    //门店商品
     public function store_goods()
     {
         return $this->hasMany(OrderStoreGood::class,'order_id','order_id');

@@ -17,7 +17,7 @@ Route::get('/trade', function (Request $request) {
     // return $request->trade();
 })->middleware('auth:api');
 
-Route::prefix('company')->group(function () {
+Route::prefix('trade')->group(function () {
 
     Route::post('orders', 'OrderController@orderList')->name('orders');
 });
