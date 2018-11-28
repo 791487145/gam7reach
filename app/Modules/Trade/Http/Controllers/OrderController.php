@@ -8,6 +8,7 @@ use App\Model\Company;
 use App\Model\MainCategory;
 use App\Model\Order;
 use App\Model\OrderLog;
+use App\Model\Store;
 use Illuminate\Http\Request;
 use Cache;
 
@@ -23,10 +24,12 @@ class OrderController extends BaiscController
     {
         $param = $request->only('store_id','order_sn','start_time','order_state','shipping_type','payment_code','order_type','page','limit','end_time');
         $orders = Order::order($orders,$param,$this->company_id);
+        $stores = Store::whereCompanyId($this->company_id)->select('store_id','store_name')->get();
 
         $data = array(
             'orders' => $orders,
-            'count' => count($orders)
+            'count' => count($orders),
+            'stores' => $stores
         );
         return $this->success($data);
     }
@@ -50,7 +53,7 @@ class OrderController extends BaiscController
             $good->discounts = bcsub($good->goods_price,$good->goods_pay_price,2);
         }
 
-        $order = Order::orderCN($order);
+        $order = Order::orderDetail($order);
         $order_log = OrderLog::whereOrderId($order->order_id)->orderBy('log_id','asc')->select('log_orderstate','log_time')->get();
 
         $data = array(

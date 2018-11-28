@@ -93,11 +93,17 @@ class Order extends Eloquent
 	const ORDER_FLAG_STORE = 1;
 	//order_state
     const ORDER_STATUS_CANCEL = 0;
+    const ORDER_STATUS_NOT_PAY = 10;
+    const ORDER_STATUS_PAY = 20;
     const ORDER_STATUS_SEND = 30;
+    const ORDER_STATUS_RECEIVE = 40;
     const ORDER_STATUS_REFUND = 50;
     //order_type
     const ORDER_TYPE_STIFF = 1;
     const ORDER_TYPE_PUB = 0;
+    //shipping_type
+    const SHIPPING_TYPE_STIFF = 1;
+    const SHIPPING_TYPE_SEND = 0;
 
 	protected $casts = [
 		'company_id' => 'int',
@@ -205,9 +211,39 @@ class Order extends Eloquent
             }else{
                 $order->goods = $order->store_goods()->select('goods_name','goods_num')->get();
             }
+            $order = self::orderCN($order);
         }
 
         return $orders;
+    }
+
+    static function orderCN($order)
+    {
+        $order_state = array(
+            self::ORDER_STATUS_CANCEL => '已取消',
+            self::ORDER_STATUS_NOT_PAY => "未付款",
+            self::ORDER_STATUS_PAY => "已发货",
+            self::ORDER_STATUS_SEND => "已送货",
+            self::ORDER_STATUS_RECEIVE => "已收货",
+            self::ORDER_STATUS_REFUND => "退款中"
+        );
+
+        $order_type = array(
+            self::ORDER_TYPE_PUB => "普通",
+            self::ORDER_TYPE_STIFF => "自提"
+        );
+        $shipping_type = array(
+            self::SHIPPING_TYPE_SEND => "物流配送",
+            self::SHIPPING_TYPE_STIFF => "到店自提"
+        );
+        //dd($order);
+        $order->order_state_name = $order_state[$order->order_state];
+        $order->order_type_name = $order_type[$order->order_type];
+        $order->shipping_type_name = $shipping_type[$order->shipping_type];
+
+        $pay_name = $order->co_paymentpayment()->first()->payment()->first();
+        $order->payment_name = $pay_name->payment_name;
+        return $order;
     }
 
     //旗舰店商品
@@ -221,7 +257,12 @@ class Order extends Eloquent
         return $this->hasMany(OrderStoreGood::class,'order_id','order_id');
     }
 
-    static function orderCN($order)
+    public function co_payment()
+    {
+        return $this->hasOne(CoPayment::class,'id','payment_code');
+    }
+
+    static function orderDetail($order)
     {
         if($order->order_state == self::ORDER_STATUS_REFUND){
             $order->refund_no = RefundReturn::whereOrderId($order->order_id)->value('refund_sn');
