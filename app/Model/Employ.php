@@ -66,6 +66,7 @@ class Employ extends Authenticatable implements JWTSubject
     const STATUS_NORMAL = 1;
     const STATUS_FORBBIN = 2;
 
+
 	protected $casts = [
 		'company_id' => 'int',
 		'department_id' => 'int',

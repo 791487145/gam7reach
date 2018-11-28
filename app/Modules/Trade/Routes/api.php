@@ -20,4 +20,5 @@ Route::get('/trade', function (Request $request) {
 Route::prefix('trade')->group(function () {
 
     Route::post('orders', 'OrderController@orderList')->name('orders');
+    Route::post('orders/show', 'OrderController@orderShow')->name('orderShow');
 });

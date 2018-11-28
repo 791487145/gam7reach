@@ -79,6 +79,8 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Query\Builder|\App\Model\Order withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\App\Model\Order withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Model\OrderShopGood[] $shop_goods
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Model\OrderStoreGood[] $store_goods
  */
 class Order extends Eloquent
 {
@@ -86,9 +88,15 @@ class Order extends Eloquent
 	protected $table = '7r_order';
 	protected $primaryKey = 'order_id';
 	public $timestamps = false;
-
+    //order_flag
 	const ORDER_FLAG_SHOP = 0;
 	const ORDER_FLAG_STORE = 1;
+	//order_state
+    const ORDER_STATUS_CANCEL = 0;
+    const ORDER_STATUS_REFUND = 50;
+    //order_type
+    const ORDER_TYPE_STIFF = 1;
+    const ORDER_TYPE_PUB = 0;
 
 	protected $casts = [
 		'company_id' => 'int',
@@ -155,8 +163,9 @@ class Order extends Eloquent
      */
 	static function order($orders,$param,$company_id)
     {
-        dd(1);
+
         $orders = $orders->whereCompanyId($company_id);
+
         if(!empty($param['store_id'])){
             if($param['store_id'] == 999){
                 $orders = $orders->whereOrderFlag(self::ORDER_FLAG_SHOP);
@@ -187,7 +196,7 @@ class Order extends Eloquent
         }
 
         $orders = $orders->select('order_id','order_sn','add_time','order_state','order_type','payment_code','shipping_type','order_amount','order_flag')
-            ->forPage($param['page'],$param['limit'])->get();
+            ->forPage($param['page'],$param['limit'])->withTrashed()->get();
 
         foreach ($orders as $order){
             if($order->order_flag == self::ORDER_FLAG_SHOP){
@@ -209,5 +218,21 @@ class Order extends Eloquent
     public function store_goods()
     {
         return $this->hasMany(OrderStoreGood::class,'order_id','order_id');
+    }
+
+    static function orderCN($order)
+    {
+        if($order->order_state == self::ORDER_STATUS_REFUND){
+            $order->refund_no = RefundReturn::whereOrderId($order->order_id)->value('refund_sn');
+        }
+        if($order->order_flag == self::ORDER_FLAG_SHOP){
+            $order->store_name = '官方旗舰店';
+        }
+        if($order->order_type == self::ORDER_TYPE_PUB){
+
+        }
+        if($order->order_type == self::ORDER_TYPE_STIFF){
+
+        }
     }
 }

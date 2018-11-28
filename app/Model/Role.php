@@ -38,8 +38,13 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 class Role extends Eloquent
 {
 	protected $table = '7r_role';
-
     protected $dateFormat = 'U';
+
+    //preinstall_role
+    const PREINSTALL_ROLE_ADMIN = 1;
+    const PREINSTALL_ROLE_REGION = 2;
+    const PREINSTALL_ROLE_SHOPER = 3;
+    const PREINSTALL_ROLE_GUIDE = 4;
 
 	protected $casts = [
 		'company_id' => 'int',
