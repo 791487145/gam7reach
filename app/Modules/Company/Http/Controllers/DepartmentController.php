@@ -25,12 +25,12 @@ class DepartmentController extends BaiscController
      */
     public function departmentList(Request $request)
     {
-        $dapartments = Department::whereCompanyId($this->company_id)->select('dep_name','dep_tel','dep_employ_id','id')
+        $dapartments = Department::whereCompanyId($this->company_id)->select('dep_name','id')
             ->forPage($request->post('page',1),$request->post('limit',self::LIMIT))->get();
 
-        foreach ($dapartments as $dapartment){
+       /* foreach ($dapartments as $dapartment){
             $dapartment->employ_name = Employ::whereId($dapartment->dep_employ_id)->value('name');
-        }
+        }*/
 
         $data = array(
             'department_count' => count($dapartments),
@@ -50,8 +50,8 @@ class DepartmentController extends BaiscController
         $department->dep_name = $request->post('dep_name');
         $department->dep_description = $request->post('dep_description','');
         $department->company_id = $this->company_id;
-        $department->dep_employ_id = $request->post('dep_employ_id',0);
-        $department->dep_tel = $request->post('dep_tel',0);
+        //$department->dep_employ_id = $request->post('dep_employ_id',0);
+        //$department->dep_tel = $request->post('dep_tel',0);
         $department->save();
 
         return $this->created('创建成功');
@@ -92,8 +92,8 @@ class DepartmentController extends BaiscController
 
         $department->dep_name = $request->post('dep_name');
         $department->dep_description = $request->post('dep_description','');
-        $department->dep_tel = $request->post('dep_tel',0);
-        $department->dep_employ_id = $request->post('dep_employ_id',0);
+        //$department->dep_tel = $request->post('dep_tel',0);
+        //$department->dep_employ_id = $request->post('dep_employ_id',0);
         $department->save();
         return $this->message('修改成功');
     }

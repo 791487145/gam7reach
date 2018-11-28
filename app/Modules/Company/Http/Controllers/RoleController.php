@@ -132,7 +132,7 @@ class RoleController extends BaiscController
         if(is_null($role)){
             return $this->failed('暂无角色');
         }
-        if($role->preinstall_role <= $this->guide){
+        if($role->preinstall_role != 0){
             return $this->failed('系统角色不能删除');
         }
         if(Employ::whereRoleId($role->id)->exists()){

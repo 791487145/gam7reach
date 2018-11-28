@@ -54,6 +54,9 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsSpuno($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods whereGoodsState($value)
  * @mixin \Eloquent
+ * @property-read \App\Model\ShopGood $shopGoods
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Model\StoreGood[] $storeGoods
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Goods upShelves()
  */
 class Goods extends Eloquent
 {

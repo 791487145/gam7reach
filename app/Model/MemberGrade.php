@@ -11,7 +11,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rMemberGrade
- * 
+ *
  * @property int $grade_id
  * @property string $grade_level
  * @property string $grade_name
@@ -19,8 +19,21 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property string $grade_rights
  * @property int $is_enable
  * @property int $company_id
- *
  * @package App\Models
+ * @property string|null $grade_description 等级描述
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade enable()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade whereGradeDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade whereGradeExppoints($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade whereGradeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade whereGradeLevel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade whereGradeName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade whereGradeRights($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberGrade whereIsEnable($value)
+ * @mixin \Eloquent
  */
 class MemberGrade extends Eloquent
 {

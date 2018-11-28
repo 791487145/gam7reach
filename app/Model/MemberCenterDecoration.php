@@ -11,7 +11,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rMemberCenterDecoration
- * 
+ *
  * @property int $mc_dec_id
  * @property int $company_id
  * @property string $bg_img
@@ -23,8 +23,22 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property string $element_setting
  * @property int $created_at
  * @property int $updated_at
- *
  * @package App\Models
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration whereBgImg($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration whereElementSetting($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration whereLevelEnable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration whereMcDecId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration whereMoudleEnable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration wherePageStyle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration whereQrCodeEnable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration whereRightsEnable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\MemberCenterDecoration whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class MemberCenterDecoration extends Eloquent
 {

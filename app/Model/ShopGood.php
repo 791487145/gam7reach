@@ -13,7 +13,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rShopGood
- * 
+ *
  * @property int $shop_goods_id
  * @property int $goods_id
  * @property float $goods_shop_price
@@ -33,8 +33,31 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property int $shop_id
  * @property int $company_id
  * @property int $is_points
- *
  * @package App\Models
+ * @property-read \App\Model\Goods $goods
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereEvaluationCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsAddtime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsClick($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsCollect($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsCommend($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsEdittime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsFreight($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsPromotionPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsPromotionType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsSalenum($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsShopPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsSpec($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereGoodsStorage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereIsPoints($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereShopGoodsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShopGood whereShopId($value)
+ * @mixin \Eloquent
  */
 class ShopGood extends Eloquent
 {

@@ -16,3 +16,9 @@ use Illuminate\Http\Request;
 Route::get('/trade', function (Request $request) {
     // return $request->trade();
 })->middleware('auth:api');
+
+Route::prefix('trade')->group(function () {
+
+    Route::post('orders', 'OrderController@orderList')->name('orders');
+    Route::post('orders/show', 'OrderController@orderShow')->name('orderShow');
+});

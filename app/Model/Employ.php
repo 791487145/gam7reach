@@ -48,6 +48,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @mixin \Eloquent
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \App\Model\Role $role
+ * @property string|null $store_id 云店id （店长、区经用）
+ * @property-read \App\Model\Department $department
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Employ whereStoreId($value)
  */
 class Employ extends Authenticatable implements JWTSubject
 {
@@ -62,6 +65,7 @@ class Employ extends Authenticatable implements JWTSubject
     //status
     const STATUS_NORMAL = 1;
     const STATUS_FORBBIN = 2;
+
 
 	protected $casts = [
 		'company_id' => 'int',

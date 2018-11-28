@@ -55,6 +55,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShoppingGuide whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\ShoppingGuide whereWorkNo($value)
  * @mixin \Eloquent
+ * @property-read \App\Model\Store $store
  */
 class ShoppingGuide extends Eloquent
 {

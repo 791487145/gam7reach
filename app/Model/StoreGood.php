@@ -13,7 +13,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rStoreGood
- * 
+ *
  * @property int $store_goods_id
  * @property int $goods_id
  * @property float $goods_store_price
@@ -33,8 +33,31 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property int $store_id
  * @property int $company_id
  * @property int $is_points
- *
  * @package App\Models
+ * @property-read \App\Model\Goods $goods
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereEvaluationCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsAddtime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsClick($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsCollect($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsCommend($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsEdittime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsFreight($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsPromotionPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsPromotionType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsSalenum($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsSpec($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsStorage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereGoodsStorePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereIsPoints($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereStoreGoodsId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\StoreGood whereStoreId($value)
+ * @mixin \Eloquent
  */
 class StoreGood extends Eloquent
 {
