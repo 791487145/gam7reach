@@ -2,13 +2,12 @@
 
 /**
  * Created by Reliese Model.
- * Date: Wed, 14 Nov 2018 01:51:17 +0000.
+ * Date: Wed, 28 Nov 2018 05:44:34 +0000.
  */
 
 namespace App\Model;
 
 use Reliese\Database\Eloquent\Model as Eloquent;
-
 
 /**
  * App\Model\OrderCommon
@@ -26,8 +25,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property string|null $deliver_explain 发货备注
  * @property string $reciver_name 收货人姓名
  * @property string $reciver_info 收货人其它信息（序列化json）
- * @property int $reciver_province_id 收货人省级ID
- * @property int $reciver_city_id 收货人市级ID
+ * @property string $reciver_address 省市区（json）
  * @property string|null $promotion_info 促销信息备注（序列化或json）
  * @property string|null $dlyo_pickup_code 提货码
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon newModelQuery()
@@ -44,10 +42,9 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon whereOrderMessage($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon whereOrderPointscount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon wherePromotionInfo($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon whereReciverCityId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon whereReciverAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon whereReciverInfo($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon whereReciverName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon whereReciverProvinceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon whereShippingExpressId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\OrderCommon whereShippingTime($value)
  * @mixin \Eloquent
@@ -64,9 +61,7 @@ class OrderCommon extends Eloquent
 		'evaluation_time' => 'int',
 		'evalseller_time' => 'int',
 		'order_pointscount' => 'int',
-		'coupon_price' => 'int',
-		'reciver_province_id' => 'int',
-		'reciver_city_id' => 'int'
+		'coupon_price' => 'int'
 	];
 
 	protected $fillable = [
@@ -82,8 +77,7 @@ class OrderCommon extends Eloquent
 		'deliver_explain',
 		'reciver_name',
 		'reciver_info',
-		'reciver_province_id',
-		'reciver_city_id',
+		'reciver_address',
 		'promotion_info',
 		'dlyo_pickup_code'
 	];

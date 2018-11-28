@@ -31,6 +31,11 @@ class OrderController extends BaiscController
         return $this->success($data);
     }
 
+    /**
+     * 订单详情
+     * @param Request $request
+     * @return mixed
+     */
     public function orderShow(Request $request)
     {
         $order = Order::whereOrderId($request->post('order_id'))->withTrashed()->first();
@@ -47,6 +52,40 @@ class OrderController extends BaiscController
 
         $order = Order::orderCN($order);
         $order_log = OrderLog::whereOrderId($order->order_id)->orderBy('log_id','asc')->select('log_orderstate','log_time')->get();
+
+        $data = array(
+            'order' => $order,
+            'order_log' => $order_log,
+            'goods' => $goods
+        );
+        return $this->success($data);
+    }
+
+    /**
+     * 订单发货
+     * @param Request $request
+     * @return mixed
+     */
+    public function orderSend(Request $request)
+    {
+        $order = Order::whereOrderId($request->post('order_id'))->withTrashed()->first();
+        $order->update([
+            'shipping_code' => $request->post('shipping_code'),
+            'order_state' => Order::ORDER_STATUS_SEND
+        ]);
+        $user = auth('employ')->user();
+        $role = $user->role;
+
+        $param = array(
+            'order_id' => $order->order_id,
+            'log_msg' => '订单发货',
+            'log_time' => time(),
+            'log_role' => $role->role_name,
+            'log_user' => $user->name,
+            'log_orderstate' => Order::ORDER_STATUS_SEND
+        );
+        OrderLog::create($param);
+        return $this->message('发货成功');
     }
 
 

@@ -25,7 +25,8 @@ class BaiscController extends BascController
     {
         $this->middleware(function ($request, $next) {
             $name = Route::currentRouteName();
-
+            /*$a = auth('employ')->check();
+            dd($a);*/
             $employ = auth('employ')->user();
 
             if(empty($employ)){

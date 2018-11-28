@@ -93,6 +93,7 @@ class Order extends Eloquent
 	const ORDER_FLAG_STORE = 1;
 	//order_state
     const ORDER_STATUS_CANCEL = 0;
+    const ORDER_STATUS_SEND = 30;
     const ORDER_STATUS_REFUND = 50;
     //order_type
     const ORDER_TYPE_STIFF = 1;
@@ -225,14 +226,30 @@ class Order extends Eloquent
         if($order->order_state == self::ORDER_STATUS_REFUND){
             $order->refund_no = RefundReturn::whereOrderId($order->order_id)->value('refund_sn');
         }
-        if($order->order_flag == self::ORDER_FLAG_SHOP){
-            $order->store_name = '官方旗舰店';
-        }
-        if($order->order_type == self::ORDER_TYPE_PUB){
 
+        $order->stiff_address = '';
+        $store = Store::whereStoreId($order->store_id)->first();
+        if($order->order_flag == self::ORDER_FLAG_STORE){
+            $order->stiff_address = Store::addressCN($store->area_info).$store->store_address;//配送门店
+        }
+
+        $order_comment = OrderCommon::whereOrderId($order->order_id)->first();
+        $order->order_message = $order_comment->order_message;//留言
+
+        if($order->order_type == self::ORDER_TYPE_PUB){
+            $order->order_type_name = '配送';
+
+            $receive_address = json_decode($order_comment->reciver_address,true);
+            $order->reciver_address = Store::addressCN($order_comment->reciver_address).$receive_address['address'];
+            $order->reciver_name = $order_comment->reciver_name;
+
+            $reciver_info = unserialize($order_comment->reciver_info);
+            $order->reciver_info_mobile = $reciver_info['mobile'];
         }
         if($order->order_type == self::ORDER_TYPE_STIFF){
-
+            $order->order_type_name = '到店自提';
         }
+
+        return $order;
     }
 }

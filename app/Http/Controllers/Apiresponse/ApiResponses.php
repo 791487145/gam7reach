@@ -70,7 +70,7 @@ trait ApiResponses
      * @param string $status
      * @return mixed
      */
-    public function failed($message, $code = FoundationResponse::HTTP_FORBIDDEN, $status = 'error'){
+    public function failed($message, $code = FoundationResponse::HTTP_CREATED, $status = 'error'){
 
         return $this->setStatusCode($code)->message($message,$status);
     }

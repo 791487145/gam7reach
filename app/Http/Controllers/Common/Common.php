@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers\Common;
 
+use App\Model\Area;
+
 trait Common
 {
 
@@ -36,5 +38,6 @@ trait Common
         }
         return $tree;
     }
+
 
 }

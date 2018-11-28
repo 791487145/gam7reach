@@ -21,4 +21,5 @@ Route::prefix('trade')->group(function () {
 
     Route::post('orders', 'OrderController@orderList')->name('orders');
     Route::post('orders/show', 'OrderController@orderShow')->name('orderShow');
+    Route::post('orders/send', 'OrderController@orderSend')->name('orderSend');
 });
