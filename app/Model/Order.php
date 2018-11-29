@@ -241,7 +241,7 @@ class Order extends Eloquent
         $order->order_type_name = $order_type[$order->order_type];
         $order->shipping_type_name = $shipping_type[$order->shipping_type];
 
-        $pay_name = $order->co_paymentpayment()->first()->payment()->first();
+        $pay_name = $order->co_payment()->first()->payment()->first();
         $order->payment_name = $pay_name->payment_name;
         return $order;
     }

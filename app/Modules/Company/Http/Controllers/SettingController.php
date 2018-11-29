@@ -14,7 +14,7 @@ use App\Model\Store;
 use Illuminate\Http\Request;
 use UUID;
 
-class StoreController extends BaiscController
+class SettingController extends BaiscController
 {
     protected $preinstall_role;
     public function __construct()
