@@ -11,6 +11,7 @@ use App\Http\Controllers\Common\Common;
 
 class BascController extends Controller
 {
+
     use ApiResponses,Common;
 
 }

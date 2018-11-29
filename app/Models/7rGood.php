@@ -2,11 +2,7 @@
 
 /**
  * Created by Reliese Model.
-<<<<<<< HEAD
- * Date: Mon, 26 Nov 2018 02:47:51 +0000.
-=======
- * Date: Mon, 26 Nov 2018 09:28:16 +0000.
->>>>>>> upstream/master
+ * Date: Thu, 29 Nov 2018 06:52:56 +0000.
  */
 
 namespace App\Models;

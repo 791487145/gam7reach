@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Model\CompanyExtend;
+use App\Model\SmsLog;
+use Illuminate\Support\Facades\Log;
 use Overtrue\EasySms\EasySms;
 
 class SmsService
@@ -19,12 +21,12 @@ class SmsService
         $config = config('easysms');
         $sms_config  =  $config['sms_config'];
         $sign_name='企及云';
-        if($send_type!=1){//如果不是登录
-            //查询企业扩展信息获取短信签名
-            $company_extend=CompanyExtend::where('company_id',$company_id)->first();
-            if(!$company_extend)return false;
-            $sign_name=$company_extend->sign_name;
-        }
+
+        //查询企业扩展信息获取短信签名
+        $company_extend=CompanyExtend::where('company_id',$company_id)->first();
+        if(!$company_extend)return [];
+        $sign_name=$company_extend->sign_name;
+
 
         $config = [
             'timeout' => 5.0,
@@ -43,8 +45,8 @@ class SmsService
                     'file' => '/tmp/easy-sms.log',
                 ],
                 'aliyun' => [
-                    'access_key_id' => '',
-                    'access_key_secret' => '',
+                    'access_key_id' => 'LTAIiPuejcZGWQS5',
+                    'access_key_secret' => 'MenUfGS502erc2sFKPaTILklJVsOZ6',
                     'sign_name' =>$sign_name,
                 ],
             ],
@@ -56,17 +58,19 @@ class SmsService
                 'code' => $code,
             ],
         ];
-        if (env('APP_DEBUG')&&1==2) {//开发环境不真发送
+        if (env('APP_DEBUG')) {//开发环境不真发送
             $code = 1234;
         } else {
-
             try{
                 $easySms = new EasySms($config);
                 //发送短信
                 $easySms->send($phone, $message);
             }catch (\Exception $e) {
-
-                dd($e->getLastException());
+                $err_log='发送短信错误:';
+                foreach ($e->getExceptions() as $v){
+                    $err_log.=$v->getMessage();
+                }
+                Log::error($err_log);
                 return [];
             }
         }
@@ -74,6 +78,14 @@ class SmsService
         $key = 'verificationCode_'.str_random(15);
         $expiredAt = now('PRC')->addMinutes($sms_config['expire']);
         \Cache::put($key, ['phone' => $phone, 'code' => $code], $expiredAt);
+        //发送成功写入企业短信记录表
+        SmsLog::create([
+            'log_phone'=>$phone,
+            'log_captcha'=>$code,
+            'log_type'=>$send_type,
+            'add_time'=>time(),
+            'company_id'=>$company_id
+        ]);
         return ['key'=>$key, 'expire'=>$expiredAt];
     }
 
