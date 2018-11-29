@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Model\CouponTemplate;
+use App\Policies\CservicePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 

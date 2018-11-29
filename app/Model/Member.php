@@ -9,7 +9,9 @@
 namespace App\Model;
 
 use App\Http\Controllers\BaiscController;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Reliese\Database\Eloquent\Model as Eloquent;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * Class 7rMember
@@ -69,7 +71,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\Member whereWeixinUnionid($value)
  * @mixin \Eloquent
  */
-class Member extends Eloquent
+class Member extends Authenticatable implements  JWTSubject
 {
 	protected $table = '7r_member';
 	protected $primaryKey = 'member_id';
@@ -101,9 +103,20 @@ class Member extends Eloquent
 		'company_id',
 		'store_id'
 	];
-	/*
-	 * 获取来源
-	 */
+	public function getJWTIdentifier()
+    {
+        // TODO: Implement getJWTIdentifier() method.
+        return $this->getKey();
+    }
+    public function getJWTCustomClaims()
+    {
+        // TODO: Implement getJWTCustomClaims() method.
+        return [];
+    }
+
+    /*
+     * 获取来源
+     */
 	protected function getChannel($key){
 	    $source_channel=array(
 	        '1'=>'自主注册',
