@@ -151,7 +151,7 @@ class Store extends Eloquent
         $province = Area::whereAreaId($address['province'])->value('area_name');
         $city = Area::whereAreaId($address['city'])->value('area_name');
         $area = Area::whereAreaId($address['area'])->value('area_name');
-        //dd($province);
+
         return $province.$city.$area;
     }
 

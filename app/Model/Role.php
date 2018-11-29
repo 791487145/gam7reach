@@ -57,7 +57,8 @@ class Role extends Eloquent
 		'role_name',
 		'limits',
 		'company_id',
-		'preinstall_role'
+		'preinstall_role',
+        'descripe'
 	];
 
 }
