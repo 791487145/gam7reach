@@ -40,8 +40,7 @@ class LoginController extends BascController{
             'moblie.is_mobile'=>'手机格式不正确',
         );
         $validator=Validator::make($request->all(),[
-            'mobile'=>'required',
-            'mobile'=>'is_mobile',
+            'mobile'=>'required|is_mobile',
         ],$message);
         if($validator->fails()){
             return $this->failed($validator->errors()->first());

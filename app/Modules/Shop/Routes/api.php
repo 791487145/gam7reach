@@ -20,8 +20,13 @@ Route::prefix('shop')->group(function(){
     Route::namespace('Member')->group(function(){
         //发送短信
         Route::post('sendsms','LoginController@sendSms')->name('sendSms');
-        //会员登录
-        Route::post('login','LoginController@login')->name('shopLogin');
+        //会员分组
+        Route::prefix('member')->group(function(){
+            //会员登录
+            Route::post('login','LoginController@login')->name('shopLogin');
+            //会员中心
+            Route::post('home','MemberController@home')->name('memberHome');
+        });
     });
 
 });
