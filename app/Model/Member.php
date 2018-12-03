@@ -153,6 +153,12 @@ class Member extends Authenticatable implements  JWTSubject
         return $this->hasMany(MAddress::class,'member_id','member_id');
     }
     /*
+     * 会员订单
+     */
+    public function orders(){
+        return $this->hasMany(Order::class,'buyer_id','member_id');
+    }
+    /*
      * 会员列表
      */
     public function getList($request,$company_id){
