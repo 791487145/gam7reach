@@ -159,14 +159,16 @@ class Goods extends Eloquent
      * 添加商品
      */
     public function addGoods($date){
+        $goods_id=0;
         //获取企业默认相册
         $albumClass=AlbumClass::where(['company_id'=>$date['company_id'],'is_default'=>1])->first();
         if($date['goods_images']){//处理商品图片
             $goods_images=$date['goods_images'];
             $date['goods_image']=$goods_images[0];
             unset($date['goods_images']);
-            DB::transaction(function () use($goods_images,$date,$albumClass){//开启事务
+            $goods_id=DB::transaction(function () use($goods_images,$date,$albumClass){//开启事务
                 $goods=Goods::create($date);
+                $goods_id=$goods->goods_id;
                 foreach ($goods_images as $image){//插入企业相册图片
                     AlbumPic::create(['apic_name'=>$image,'aclass_id'=>$albumClass->aclass_id,
                         'apic_cover'=>$image,'upload_time'=>time()]);
@@ -174,10 +176,11 @@ class Goods extends Eloquent
                     GoodsImage::create(['goods_id'=>$goods->goods_id,'company_id'=>$date['company_id'],
                         'goods_image'=>$image]);
                 }
-
+                return $goods_id;
             });
 
         }
+        return $goods_id;
     }
     /*
      * 编辑商品

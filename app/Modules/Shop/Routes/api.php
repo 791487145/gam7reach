@@ -26,6 +26,8 @@ Route::prefix('shop')->group(function(){
             Route::post('login','LoginController@login')->name('shopLogin');
             //会员中心
             Route::post('home','MemberController@home')->name('memberHome');
+            //会员我的资料
+            Route::match(['get','post'],'info','MemberController@info')->name('memberinfo');
         });
     });
 

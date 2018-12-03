@@ -94,8 +94,12 @@ class GoodsController extends BaiscController
         }
         $date=$request->all();
         $date['company_id']=$this->company_id;
-        $goods->addGoods($date);
-        return $this->message('添加商品成功');
+        $goods_id=$goods->addGoods($date);
+        if($goods_id){
+            return $this->success(array('goods_id'=>$goods_id));
+        }
+        return $this->failed('添加失败');
+
     }
     /*
      * 旗舰店添加商品
