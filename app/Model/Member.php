@@ -9,6 +9,7 @@
 namespace App\Model;
 
 use App\Http\Controllers\BaiscController;
+use App\Modules\Shop\Http\Controllers\Member\MemberAddressesController;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Reliese\Database\Eloquent\Model as Eloquent;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -144,6 +145,12 @@ class Member extends Authenticatable implements  JWTSubject
 
        return $this->hasOne(Store::class,'store_id','store_id');
 
+    }
+    /*
+     * 会员地址
+     */
+    public function addresses(){
+        return $this->hasMany(MAddress::class,'member_id','member_id');
     }
     /*
      * 会员列表

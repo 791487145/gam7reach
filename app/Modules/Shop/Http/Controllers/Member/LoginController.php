@@ -99,6 +99,7 @@ class LoginController extends BascController{
             'source_channel'=>$source_channel,
             'member_time'=>time(),
             'member_truename'=>'游客_'.str_random(6),
+            'member_birthday'=>strtotime('2018-01-01'),
             'member_login_time'=>time(),
             'member_login_ip'=>$request->getClientIp(),
             'company_id'=>$this->company_id,

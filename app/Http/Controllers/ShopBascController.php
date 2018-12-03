@@ -9,6 +9,7 @@ namespace App\Http\Controllers;
 class ShopBascController extends BascController{
     protected $company_id;//企业id
     protected $member;
+    protected $addressCount=10;
     public function __construct()
     {
         $this->middleware(function($request,$next){

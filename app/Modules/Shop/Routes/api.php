@@ -26,8 +26,25 @@ Route::prefix('shop')->group(function(){
             Route::post('login','LoginController@login')->name('shopLogin');
             //会员中心
             Route::post('home','MemberController@home')->name('memberHome');
+            //会员我的订单
+            Route::post('order','MemberController@myOrder')->name('mamberOrder')->name('memberOrder');
+            //我的喜欢
+            Route::post('favorites','MemberController@favorites')->name('memberFavorites');
+            //我的消息
+            Route::post('message','MemberController@myMessage')->name('memberMessage');
             //会员我的资料
-            Route::match(['get','post'],'info','MemberController@info')->name('memberinfo');
+            Route::match(['get','post'],'info','MemberController@info')->name('memberInfo');
+            //会员地址分组
+            Route::prefix('addresses')->group(function(){
+                //地址列表
+                Route::post('list','MemberAddressesController@list')->name('addressesList');
+                //添加地址
+                Route::post('add','MemberAddressesController@add')->name('addressesAdd');
+                //编辑地址
+                Route::match(['get','post'],'edit','MemberAddressesController@edit')->name('addressesEdit');
+                //删除地址
+                Route::post('delete','MemberAddressesController@delete')->name('addressesDelete');
+            });
         });
     });
 
