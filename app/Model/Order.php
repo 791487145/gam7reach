@@ -81,6 +81,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Model\OrderShopGood[] $shop_goods
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Model\OrderStoreGood[] $store_goods
+ * @property-read \App\Model\CoPayment $co_payment
  */
 class Order extends Eloquent
 {
@@ -236,7 +237,7 @@ class Order extends Eloquent
             self::SHIPPING_TYPE_SEND => "物流配送",
             self::SHIPPING_TYPE_STIFF => "到店自提"
         );
-        //dd($order);
+
         $order->order_state_name = $order_state[$order->order_state];
         $order->order_type_name = $order_type[$order->order_type];
         $order->shipping_type_name = $shipping_type[$order->shipping_type];

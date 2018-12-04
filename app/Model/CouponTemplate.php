@@ -9,28 +9,6 @@ namespace App\Model;
 
 use Reliese\Database\Eloquent\Model as Eloquent;
 
-/**
- * Class 7rCouponTemplate
- * 
- * @property int $coupon_t_id
- * @property int $company_id
- * @property string $coupon_t_title
- * @property string $coupon_t_desc
- * @property int $coupon_t_start_date
- * @property int $coupon_t_end_date
- * @property float $coupon_t_price
- * @property float $coupon_t_limit
- * @property int $coupon_t_state
- * @property int $coupon_t_total
- * @property int $coupon_t_giveout
- * @property int $coupon_t_used
- * @property int $coupon_t_add_date
- * @property int $coupon_t_eachlimit
- * @property string $coupon_t_style
- * @property bool $coupon_t_recommend
- *
- * @package App\Models
- */
 class CouponTemplate extends Eloquent
 {
 	protected $table = '7r_coupon_template';

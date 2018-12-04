@@ -18,6 +18,11 @@ use UUID;
 
 class SettingController extends BaiscController
 {
+    /**
+     * 设置
+     * @param Request $request
+     * @return mixed
+     */
     public function paySetting(Request $request)
     {
         $config = CompanyExtend::whereCompanyId($this->company_id)->first();
@@ -35,6 +40,11 @@ class SettingController extends BaiscController
         return $this->success($data);
     }
 
+    /**
+     * 支付设置
+     * @param Request $request
+     * @return mixed
+     */
     public function paySettingUpdate(Request $request)
     {
         $wechat = array(
@@ -54,6 +64,11 @@ class SettingController extends BaiscController
         return $this->message('修改成功');
     }
 
+    /**
+     * 公众号设置
+     * @param Request $request
+     * @return mixed
+     */
     public function wechatSetting(Request $request)
     {
         $param = array(

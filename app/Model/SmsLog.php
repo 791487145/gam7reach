@@ -11,7 +11,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class 7rSmsLog
- * 
+ *
  * @property int $log_id
  * @property string $log_phone
  * @property string $log_captcha
@@ -22,8 +22,21 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @property int $member_id
  * @property string $member_name
  * @property int $company_id
- *
  * @package App\Models
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog whereAddTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog whereLogCaptcha($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog whereLogId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog whereLogIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog whereLogMsg($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog whereLogPhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog whereLogType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog whereMemberId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\SmsLog whereMemberName($value)
+ * @mixin \Eloquent
  */
 class SmsLog extends Eloquent
 {
