@@ -57,5 +57,11 @@ Route::prefix('shop')->group(function(){
 
         });
     });
-
+    //首页
+    Route::namespace('Home')->group(function(){
+        Route::prefix('home')->group(function(){
+            //旗舰店首页
+            Route::post('/','HomeController@home')->name('shopHome');
+        });
+    });
 });
