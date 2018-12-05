@@ -31,6 +31,9 @@ class HomeController extends ShopBascController{
      * 领劵中心
      */
     public function receiveCoupon(Request $request){
-
+        //获取有效的店铺优惠券
+        $shop_coupons=$this->shop_info->coupons()->where('coupon_t_state',1)->get();
+        return $this->success($shop_coupons);
     }
+
 }

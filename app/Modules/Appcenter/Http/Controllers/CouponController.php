@@ -103,9 +103,10 @@ class CouponController extends BaiscController{
                 if(empty($request->input('shop_id'))&&empty($request->input('store_id'))){
                     return $this->failed('请指定店铺');
                 }
-
-                $coupon->shop()->sync($request->input('shop_id'),false);
-                $coupon->store()->sync($request->input('store_id'),false);
+                $shop_id=explode(',',$request->input('shop_id'));
+                $store_id=explode(',',$request->input('store_id'));
+                $coupon->shop()->sync($shop_id,false);
+                $coupon->store()->sync($store_id,false);
             }elseif($request->input('use_range')==1){//如果是全部店铺
                 $webshop=WebShop::where('company_id',$this->company_id)->first();
                 if(empty($webshop)){
