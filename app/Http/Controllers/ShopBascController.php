@@ -6,10 +6,13 @@
  * Time: 9:26 AM
  */
 namespace App\Http\Controllers;
+use App\Model\WebShop;
+
 class ShopBascController extends BascController{
     protected $company_id;//企业id
     protected $member;
     protected $addressCount=10;
+    protected $shop_id;
     public function __construct()
     {
         $this->middleware(function($request,$next){
@@ -19,6 +22,7 @@ class ShopBascController extends BascController{
             }
             $this->member=$member;
             $this->company_id=$member->company_id;
+            $this->shop_id = WebShop::whereCompanyId($member->company_id)->value('shop_id');
             return $next($request);
         });
     }

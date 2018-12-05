@@ -2,12 +2,13 @@
 
 /**
  * Created by Reliese Model.
- * Date: Wed, 28 Nov 2018 05:44:34 +0000.
+ * Date: Mon, 03 Dec 2018 09:03:33 +0000.
  */
 
 namespace App\Model;
 
 use Reliese\Database\Eloquent\Model as Eloquent;
+
 
 /**
  * App\Model\CoPayment
@@ -45,7 +46,7 @@ class CoPayment extends Eloquent
 		'payment_state'
 	];
 
-	public function payment()
+    public function payment()
     {
         return $this->hasOne(Payment::class,'payment_id','payment');
     }

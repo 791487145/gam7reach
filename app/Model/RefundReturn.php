@@ -81,6 +81,7 @@ use Reliese\Database\Eloquent\Model as Eloquent;
  * @mixin \Eloquent
  * @property int $ is_service 客服介入0未介入；1已介入
  * @property int $ is_service 客服介入0未介入；1已介入
+ * @property int $ is_service 客服介入0未介入；1已介入
  */
 class RefundReturn extends Eloquent
 {

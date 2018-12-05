@@ -47,5 +47,15 @@ Route::prefix('shop')->group(function(){
             });
         });
     });
+    //购物车
+    Route::namespace('Cart')->group(function(){
+
+        Route::post('carts','CartController@carts')->name('carts');
+        Route::prefix('cart')->group(function(){
+            Route::post('delete','CartController@cartDelete')->name('cartDelete');
+            Route::post('update','CartController@cartUpdate')->name('cartUpdate');
+
+        });
+    });
 
 });

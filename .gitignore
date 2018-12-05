@@ -3,6 +3,7 @@
 /public/storage
 /public/store
 /public/company
+/app/Models
 /storage/*.key
 /app/Models
 /database/migrations

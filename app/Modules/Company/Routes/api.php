@@ -63,10 +63,13 @@ Route::prefix('company')->group(function () {
     Route::post('regisions/delete', 'RegisionController@regisionDelete')->name('regisionDelete');
     //店铺
     Route::post('stores', 'StoreController@stores')->name('stores');
+    Route::post('stores/show', 'StoreController@storeShow')->name('storeShow');
     Route::post('stores/create', 'StoreController@storesCreate')->name('storesCreate');
     Route::post('stores/manager', 'StoreController@storesManager')->name('storesManager');
     Route::post('stores/area', 'StoreController@getArea')->name('getArea');
     Route::get('stores/export', 'StoreController@storesExport')->name('storesExport');
+    Route::post('stores/shopping', 'StoreController@storeShopping')->name('storeShopping');
+    Route::post('stores/shopping/update', 'StoreController@storeShoppingUpdate')->name('storeShoppingUpdate');
     //店员
     Route::post('guides', 'GuideController@guides')->name('guides');
     Route::get('guides/export', 'GuideController@guideExport')->name('guideExport');

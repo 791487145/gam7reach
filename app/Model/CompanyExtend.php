@@ -2,7 +2,7 @@
 
 /**
  * Created by Reliese Model.
- * Date: Mon, 26 Nov 2018 02:47:51 +0000.
+ * Date: Mon, 03 Dec 2018 09:03:33 +0000.
  */
 
 namespace App\Model;
@@ -10,13 +10,24 @@ namespace App\Model;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
- * Class 7rCompanyExtend
- * 
- * @property int $company_id
- * @property string $upload_setting
- * @property int $member_decoration_switch
+ * App\Model\CompanyExtend
  *
- * @package App\Models
+ * @property int $company_id 企业ID
+ * @property string|null $upload_setting 企业上传配置信息（序列化或json）
+ * @property int $member_decoration_switch 会员装修开关 0关闭；1开启
+ * @property string|null $sign_name 企业短信签名
+ * @property string|null $appid 微信APPid
+ * @property string|null $secret 微信秘钥
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\CompanyExtend newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\CompanyExtend newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\CompanyExtend query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\CompanyExtend whereAppid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\CompanyExtend whereCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\CompanyExtend whereMemberDecorationSwitch($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\CompanyExtend whereSecret($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\CompanyExtend whereSignName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\CompanyExtend whereUploadSetting($value)
+ * @mixin \Eloquent
  */
 class CompanyExtend extends Eloquent
 {
@@ -30,10 +41,15 @@ class CompanyExtend extends Eloquent
 		'member_decoration_switch' => 'int'
 	];
 
+	protected $hidden = [
+		'secret'
+	];
+
 	protected $fillable = [
-	    'company_id',
 		'upload_setting',
 		'member_decoration_switch',
-        'sign_name',
+		'sign_name',
+		'appid',
+		'secret'
 	];
 }
