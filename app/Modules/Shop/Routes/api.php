@@ -62,6 +62,12 @@ Route::prefix('shop')->group(function(){
         Route::prefix('home')->group(function(){
             //旗舰店首页
             Route::post('/','HomeController@home')->name('shopHome');
+            //领劵中心
+            Route::post('receive','HomeController@receiveCoupon')->name('receiveCoupon');
         });
+    });
+    //商品
+    Route::namespace('Goods')->group(function(){
+
     });
 });

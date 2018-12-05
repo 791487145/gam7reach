@@ -27,8 +27,13 @@ class UploadController extends BascController
 
     public function fileDelete(Request $request)
     {
-        $file = $request->post('file');
+        $file = $request->input('file');
         $ret = Storage::delete($file);
+        $data=['status'=>'error','code'=>'201','message'=>'删除失败'];
+        if($ret){
+            $data=['status'=>'success','code'=>'200','message'=>'删除成功'];
+        }
+        return response()->json([$data]);
     }
 
     public function download(Request $request)

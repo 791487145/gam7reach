@@ -13,6 +13,7 @@ class ShopBascController extends BascController{
     protected $member;
     protected $addressCount=10;
     protected $shop_id;
+    protected $shop_info;
     public function __construct()
     {
         $this->middleware(function($request,$next){
@@ -23,6 +24,7 @@ class ShopBascController extends BascController{
             $this->member=$member;
             $this->company_id=$member->company_id;
             $this->shop_id = WebShop::whereCompanyId($member->company_id)->value('shop_id');
+            $this->shop_info=WebShop::whereCompanyId($member->company_id)->first();
             return $next($request);
         });
     }
