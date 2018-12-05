@@ -42,7 +42,7 @@ class SmsService
             // 可用的网关配置
             'gateways' => [
                 'errorlog' => [
-                    'file' => '/tmp/easy-sms.log',
+                    'file' => storage_path('logs').'/easy-sms.log',
                 ],
                 'aliyun' => [
                     'access_key_id' => 'LTAIiPuejcZGWQS5',

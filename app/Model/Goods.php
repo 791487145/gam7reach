@@ -163,7 +163,7 @@ class Goods extends Eloquent
         //获取企业默认相册
         $albumClass=AlbumClass::where(['company_id'=>$date['company_id'],'is_default'=>1])->first();
         if($date['goods_images']){//处理商品图片
-            $goods_images=$date['goods_images'];
+            $goods_images=explode(',',$date['goods_images']);
             $date['goods_image']=$goods_images[0];
             unset($date['goods_images']);
             $goods_id=DB::transaction(function () use($goods_images,$date,$albumClass){//开启事务
@@ -189,7 +189,7 @@ class Goods extends Eloquent
         //获取企业默认相册
         $albumClass=AlbumClass::where(['company_id'=>$date['company_id'],'is_default'=>1])->first();
         if($date['goods_images']){
-            $goods_images=$date['goods_images'];
+            $goods_images=explode(',',$date['goods_images']);
             $date['goods_image']=$goods_images[0];
             unset($date['goods_images']);
             DB::transaction(function() use ($date,$goods_images,$albumClass){

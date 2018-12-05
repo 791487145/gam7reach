@@ -111,6 +111,7 @@ class GoodsController extends BaiscController
             'goods_shop_price.required'=>'旗舰店售价不能为空',
             'goods_storage.required'=>'商品库存不能为空',
             'goods_storage.numeric'=>'库存必须为数字',
+            'goods_commend.required'=>'商品是否推荐不能为空',
 
         );
         $validator = Validator::make($request->all(), [
@@ -121,6 +122,7 @@ class GoodsController extends BaiscController
                 ],
             'goods_shop_price'=>'required',
             'goods_storage'=>'required|numeric',
+            'goods_commend'=>'required'
 
         ],$message);
         if ($validator->fails()) {
@@ -146,7 +148,8 @@ class GoodsController extends BaiscController
             'goods_store_price.required'=>'云店售价不能为空',
             'goods_storage.required'=>'商品库存不能为空',
             'goods_storage.numeric'=>'库存必须为数字',
-            'store_id.required'=>'请指定所属门店'
+            'store_id.required'=>'请指定所属门店',
+            'goods_commend.required'=>'商品推荐不能为空',
         );
         $validator = Validator::make($request->all(), [
             'goods_id' => ['required',
@@ -156,7 +159,8 @@ class GoodsController extends BaiscController
             ],
             'goods_store_price'=>'required',
             'goods_storage'=>'required|numeric',
-            'store_id'=>'required'
+            'store_id'=>'required',
+            'goods_commend'=>'required',
         ],$message);
         if ($validator->fails()) {
             return $this->failed($validator->errors()->first());
@@ -203,6 +207,7 @@ class GoodsController extends BaiscController
         $data=array();
         if($goods){
             $data['goods']=$goods;
+            $data['goods_gc_info']=GoodsClass::ancestorsAndSelf($goods->gc_id);
             $goods_class=GoodsClass::all()->toTree();
             $data['goods_groups']=$goods_group;
             $data['goods_all_class']=$goods_class;
@@ -306,7 +311,7 @@ class GoodsController extends BaiscController
      */
     public function batch(Request $request,Goods $goods){
         $flag=$request->input('flag');
-        $goods_ids=$request->input('goods_id');
+        $goods_ids=explode(',',$request->input('goods_id'));
         if(is_array($goods_ids)){
             if($flag=='goods_class'){//修改商品分类
                 $gc_id=$request->input('gc_id');
@@ -339,7 +344,7 @@ class GoodsController extends BaiscController
      */
     public function shopBatch(Request $request,ShopGood $shopGood){
         $flag = $request->input('flag');
-        $shop_goods_ids=$request->input('shop_goods_id');
+        $shop_goods_ids=explode(',',$request->input('shop_goods_id'));
         if(is_array($shop_goods_ids)){
             if($flag=='delete'){//删除商品
                 $shopGood->destroy($shop_goods_ids);
@@ -353,7 +358,7 @@ class GoodsController extends BaiscController
      */
     public function storeBatch(Request $request,StoreGood $storeGood){
         $flag=$request->input('flag');
-        $store_goods_ids=$request->input('store_goods_id');
+        $store_goods_ids=explode(',',$request->input('store_goods_id'));
         if(is_array($store_goods_ids)){
             if($flag=='delete'){//删除商品
                 $storeGood->destroy($store_goods_ids);

@@ -111,4 +111,11 @@ class WebShop extends Eloquent
 		'shop_aftersales',
 		'shop_free_time'
 	];
+	/*
+	 * 旗舰店适用优惠券
+	 */
+	public function coupons(){
+	    return $this->belongsToMany(CouponTemplate::class,'7r_coupon_shop','shop_id','coupon_t_id');
+
+    }
 }

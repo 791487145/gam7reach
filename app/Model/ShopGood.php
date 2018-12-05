@@ -94,6 +94,19 @@ class ShopGood extends Eloquent
 		'is_points'
 	];
 	/*
+	 * 查询不是下架的商品
+	 */
+    public function scopeOnline($query)
+    {
+        return $query->where('goods_state','<>',0);
+    }
+    /*
+     * 查询推荐商品
+     */
+    public function scopeCommend($query){
+        return $query->where('goods_commend',1);
+    }
+	/*
 	 * 获取状态
 	 */
 	protected function getGoodsState($key){

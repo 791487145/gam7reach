@@ -46,8 +46,9 @@ class GoodsGroupController extends BaiscController
            return $this->failed($validator->errors()->first());
        }
        ;
-       if(GoodsGroup::create($date)){
-           return $this->message('添加商品分组成功');
+       $goodsGroup=GoodsGroup::create($date);
+       if($goodsGroup){
+           return $this->success(array('goods_group_id'=>$goodsGroup->goods_group_id,'group_name'=>$goodsGroup->goods_group_name),'添加商品分组成功');
        }
         return $this->failed('添加商品分组失败');
    }

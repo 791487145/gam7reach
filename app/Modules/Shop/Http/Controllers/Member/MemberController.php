@@ -17,8 +17,27 @@ class MemberController extends ShopBascController{
      */
     public function home(Request $request){
         $memberCenterDecoration=MemberCenterDecoration::where('company_id',$this->company_id)->first();
+        //根据中心装修获取对应的设置信息
         $data=$memberCenterDecoration->checkAvailable($this->member);
         return $this->success($data);
+    }
+    /*
+     * 我的订单
+     */
+    public function myOrder(Request $request){
+
+    }
+    /*
+     * 我的喜欢
+     */
+    public function favorites(Request $request){
+
+    }
+    /*
+     * 我的消息
+     */
+    public function myMessage(Request $request){
+
     }
     /*
      * 我的资料
@@ -26,7 +45,9 @@ class MemberController extends ShopBascController{
     public function info(Request $request){
         if($request->isMethod('post')){
             $message=array(
-                'member_truename.required'=>'会员'
+                'member_truename.required'=>'会员姓名不能为空',
+                'member_sex.required'=>'会员性别不能为空',
+                'member_birthday.required'=>'会员生日不能为空',
             );
             $validator=Validator::make($request->all(),[
                 'member_truename'=>'required',
@@ -36,6 +57,11 @@ class MemberController extends ShopBascController{
             if($validator->fails()){
                 return $this->failed($validator->errors()->first());
             }
+            $data=$request->all();
+            if($this->member->update($data)){
+                return $this->success('修改会员资料成功');
+            }
+            return $this->failed('修改会员资料失败');
         }
 
         if(empty($this->member)){

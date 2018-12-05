@@ -86,7 +86,6 @@ class MemberCenterDecoration extends Eloquent
         if($this->qr_code_enable){//如果二维码开启
             $data['qr_code_enable']='';
         }
-
         return $data;
     }
 }
