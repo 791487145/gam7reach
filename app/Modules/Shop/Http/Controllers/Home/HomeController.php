@@ -18,12 +18,9 @@ class HomeController extends ShopBascController{
     public function  home(Request $request){
         $shop_home_info=array(
             'shop_slide'=>unserialize($this->shop_info->shop_slide),//幻灯片
-            'notice'=>'',//公告
-            'adv_list'=>'',//广告
-            'home_goods'=>ShopGood::with(['goods'=>function($query){//首页推荐商品
-                $query->select(['goods_id','goods_name','goods_image','goods_jingle','goods_marketprice']);
-            }])->Online()->Commend()
-                ->where(['company_id'=>$this->company_id,'shop_id'=>$this->shop_id])->get(),
+            'notice'=>$this->getNotice(),//公告
+            'adv_list'=>$this->getAdv(),//广告
+            'home_goods'=>$this->getShopGoods(),
         );
         return $this->success($shop_home_info);
     }
@@ -35,5 +32,26 @@ class HomeController extends ShopBascController{
         $shop_coupons=$this->shop_info->coupons()->where('coupon_t_state',1)->get();
         return $this->success($shop_coupons);
     }
-
+    /*
+     * 获取首页推荐商品
+     */
+    private function getShopGoods(){
+        $goods=ShopGood::with(['goods'=>function($query){//首页推荐商品
+            $query->select(['goods_id','goods_name','goods_image','goods_jingle','goods_marketprice']);
+        }])->Online()->Commend()
+            ->where(['company_id'=>$this->company_id,'shop_id'=>$this->shop_id])->get();
+        return $goods;
+    }
+    /*
+     * 店铺公告
+     */
+    private function getNotice(){
+        return '';
+    }
+    /*
+     * 店铺广告
+     */
+    private function getAdv(){
+        return '';
+    }
 }

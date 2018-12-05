@@ -7,6 +7,7 @@
 
 namespace App\Model;
 
+use Carbon\Carbon;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 class CouponTemplate extends Eloquent
@@ -26,7 +27,7 @@ class CouponTemplate extends Eloquent
 		'coupon_t_used' => 'int',
 		'coupon_t_add_date' => 'datetime:Y-m-d H:i',
 		'coupon_t_eachlimit' => 'int',
-		'coupon_t_recommend' => 'bool'
+
 	];
 
 	protected $fillable = [
@@ -80,5 +81,18 @@ class CouponTemplate extends Eloquent
         });
         return $list;
     }
+    /*
+     * 检查优惠卷是否可用
+     */
+    public function checkAvailable($member,$orderAmount=null){
+        //优惠卷过期
+        if($this->coupon_t_state==2||($this->coupon_t_end_date&&$this->coupon_t_end_date->lt(Carbon::now()))){
+            throw new \Exception('优惠券已过期');
+        }
+        //优惠卷可使用时间
+        if($this->coupon_t_start_date&&$this->coupon_t_start_date->gt(Carbon::now())){
+            throw new \Exception('该优惠券现在还不能使用');
+        }
 
+    }
 }

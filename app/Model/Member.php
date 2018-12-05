@@ -194,7 +194,7 @@ class Member extends Authenticatable implements  JWTSubject
             return false;
         }
         if(isset($date['tag_id'])){//如果有会员标签
-            $tag_ids=$date['tag_id'];
+            $tag_ids=explode(',',$date['tag_id']);
             if(!is_array($tag_ids)){
                 $tag_ids=compact('tag_ids');
             }
@@ -214,7 +214,7 @@ class Member extends Authenticatable implements  JWTSubject
             return false;
         }
         if(isset($date['tag_id'])){//如果有会员标签
-            $tag_ids=$date['tag_id'];
+            $tag_ids=explode(',',$date['tag_id']);
             if(!is_array($tag_ids)){
                 $tag_ids=compact('tag_ids');
             }

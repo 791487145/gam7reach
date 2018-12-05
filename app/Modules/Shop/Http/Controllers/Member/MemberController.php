@@ -7,8 +7,10 @@
  */
 namespace  App\Modules\Shop\Http\Controllers\Member;
 use App\Http\Controllers\ShopBascController;
+use App\Model\CouponTemplate;
 use App\Model\MemberCenterDecoration;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class MemberController extends ShopBascController{
@@ -68,5 +70,27 @@ class MemberController extends ShopBascController{
             return $this->failed('无此用户');
         }
         return $this->success($this->member);
+    }
+    /*
+     * 会员领劵
+     */
+    public function getCoupon(Request $request){
+        $coupon_t_id=$request->input('coupon_t_id');
+        if(!$coupon_t_id){
+            return $this->failed('优惠券id不能为空');
+        }
+        DB::beginTransaction();
+        try{
+            if(!$coupon_info=CouponTemplate::find($coupon_t_id)){
+                throw new \Exception('无此优惠券');
+            }
+            //检查优惠卷是或否可用
+            $coupon_info->checkAvailable($this->member);
+
+        }catch (\Exception $e){
+            return $this->failed($e->getMessage());
+        }
+
+        //$coupon_info=CouponTemplate::find()
     }
 }

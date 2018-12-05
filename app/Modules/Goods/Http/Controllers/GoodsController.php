@@ -217,6 +217,20 @@ class GoodsController extends BaiscController
 
     }
     /*
+     * 编辑商品详情
+     */
+    public function editBody(Request $request){
+        $goods_id=$request->input('goods_id');
+        if(!$goods_id){
+            return $this->failed('商品id不能为空');
+        }
+        $data=$request->only(['goods_body']);
+        if(Goods::find($goods_id)->update($data)){
+            return $this->message('修改成功');
+        }
+        return $this->failed('修改失败');
+    }
+    /*
      * 编辑旗舰店商品
      */
     public function editShopGoods(Request $request,ShopGood $shopGood){

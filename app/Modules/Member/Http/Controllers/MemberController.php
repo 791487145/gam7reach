@@ -127,7 +127,7 @@ class MemberController extends BaiscController{
      */
     public function batch(Request $request,Member $member){
         $flag=$request->input('flag');
-        $member_ids=$request->input('member_id');
+        $member_ids=explode(',',$request->input('member_id'));
         if(is_array($member_ids)){
             if($flag=='delete'){//删除会员
                 if($member->destroy($member_ids)){
