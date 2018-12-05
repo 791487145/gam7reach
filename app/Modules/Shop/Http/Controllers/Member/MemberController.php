@@ -86,11 +86,13 @@ class MemberController extends ShopBascController{
             }
             //检查优惠卷是或否可用
             $coupon_info->checkAvailable($this->member);
-
+            $this->member->receive($coupon_info);
+            DB::commit();
+            return $this->message('会员领劵成功');
         }catch (\Exception $e){
+            DB::rollBack();
             return $this->failed($e->getMessage());
         }
 
-        //$coupon_info=CouponTemplate::find()
     }
 }

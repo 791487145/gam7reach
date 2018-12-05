@@ -159,6 +159,19 @@ class Member extends Authenticatable implements  JWTSubject
         return $this->hasMany(Order::class,'buyer_id','member_id');
     }
     /*
+     * 获取会员指定优惠券个数
+     */
+    public function coupon_count($coupon_t_id){
+        return $this->belongsToMany(CouponTemplate::class,'7r_m_coupon','coupon_owner_id','coupon_t_id')
+            ->wherePivot('coupon_t_id',$coupon_t_id)->count();
+    }
+    /*
+     * 会员卡卷
+     */
+    public function coupons(){
+        return $this->belongsToMany(CouponTemplate::class,'7r_m_coupon','coupon_owner_id','coupon_t_id');
+    }
+    /*
      * 会员列表
      */
     public function getList($request,$company_id){
@@ -224,5 +237,20 @@ class Member extends Authenticatable implements  JWTSubject
             }
         }
         return true;
+    }
+    /*
+     * 会员领取卡卷
+     */
+    public function receive($coupon_info){
+        $data=array(
+            'coupon_title'=>$coupon_info->coupon_t_title,
+            'coupon_desc'=>$coupon_info->coupon_t_desc,
+            'coupon_start_date'=>$coupon_info->coupon_t_start_date->timestamp,
+            'coupon_end_date'=>$coupon_info->coupon_t_end_date->timestamp,
+            'coupon_price'=>$coupon_info->coupon_t_price,
+            'coupon_limit'=>$coupon_info->coupon_t_limit,
+            'coupon_owner_name'=>$this->member_truename,
+        );
+        $this->coupons()->attach($coupon_info->coupon_t_id,$data);
     }
 }

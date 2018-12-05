@@ -83,15 +83,32 @@ class CouponTemplate extends Eloquent
     }
     /*
      * 检查优惠卷是否可用
+     * @param $type 1领劵时
      */
-    public function checkAvailable($member,$orderAmount=null){
-        //优惠卷过期
-        if($this->coupon_t_state==2||($this->coupon_t_end_date&&$this->coupon_t_end_date->lt(Carbon::now()))){
-            throw new \Exception('优惠券已过期');
-        }
-        //优惠卷可使用时间
-        if($this->coupon_t_start_date&&$this->coupon_t_start_date->gt(Carbon::now())){
-            throw new \Exception('该优惠券现在还不能使用');
+    public function checkAvailable($member,$type=1,$orderAmount=null){
+
+        if($type!=1){//不是领劵时验证
+            //优惠卷可使用时间
+            if($this->coupon_t_start_date&&$this->coupon_t_start_date->gt(Carbon::now())){
+                throw new \Exception('该优惠券现在还不能使用');
+            }
+            //优惠卷过期
+            if($this->coupon_t_state==2||($this->coupon_t_end_date&&$this->coupon_t_end_date->lt(Carbon::now()))){
+                throw new \Exception('优惠券已过期');
+            }
+        }else{//领劵时验证
+            //优惠券可发放总量
+            if($this->coupon_t_total<=0||$this->coupon_t_giveout>$this->coupon_t_total){
+                throw new \Exception('该优惠已领完');
+            }
+            //优惠券限领次数
+            if($this->coupon_t_eachlimit){
+               //获取当前优惠卷会员持有数量
+               $count=$member->coupon_count($this->coupon_t_id);
+               if($this->coupon_t_eachlimit-$count<=0){
+                   throw new \Exception('已超过限领次数');
+               }
+            }
         }
 
     }
