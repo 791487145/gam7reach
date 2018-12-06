@@ -76,4 +76,23 @@ class ShopCart extends Eloquent
         return $carts;
     }
 
+    /**
+     * 会员
+     * @param $company_id
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function member($company_id)
+    {
+        return $this->hasOne(Member::class)->where('company_id',$company_id);
+    }
+
+    static function cartSub($carts,$member)
+    {
+        $param['total'] = 0;
+
+        foreach ($carts as $cart){
+            $param['total'] = bcadd($param['total'],bcmul($cart->goods_price,$cart->goods_num,2),2);
+        }
+    }
+
 }

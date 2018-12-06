@@ -138,6 +138,13 @@ class Member extends Authenticatable implements  JWTSubject
     public function grade(){
         return $this->hasOne(MemberGrade::class,'grade_id','member_grade_id');
     }
+    /**
+     * 购物车
+     */
+    public function cart()
+    {
+        return $this->belongsTo(ShopCart::class,'buyer_id','member_id');
+    }
     /*
      * 所属门店
      */
