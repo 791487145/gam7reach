@@ -70,6 +70,11 @@ Route::prefix('shop')->group(function(){
     });
     //商品
     Route::namespace('Goods')->group(function(){
+        Route::prefix('goods')->group(function(){
+            //商品分组列表
+            Route::post('grouplist','GoodsController@groupList')->name('shopGrouplist');
+            //商品列表
 
+        });
     });
 });

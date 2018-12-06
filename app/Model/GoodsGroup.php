@@ -44,4 +44,5 @@ class GoodsGroup extends Eloquent
 		'goods_group_name',
 		'company_id'
 	];
+
 }

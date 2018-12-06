@@ -13,6 +13,8 @@ use App\Model\GoodsClass;
 use Carbon\Carbon;
 use Reliese\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 
 /**
  * App\Model\Goods
@@ -194,12 +196,16 @@ class Goods extends Eloquent
             unset($date['goods_images']);
             DB::transaction(function() use ($date,$goods_images,$albumClass){
                 //删除原来的商品图片
+                $old_images=GoodsImage::where('goods_id',$date['goods_id'])->select('goods_image')->get();
+                $old_images->each(function ($item,$key) use ($goods_images){
+                    if(!in_array($item->goods_image,$goods_images)){
+                        Storage::delete($item->goods_image);
+                    }
+                    AlbumPic::where('apic_cover',$item->goods_image)->delete();
+                });
                 GoodsImage::where('goods_id',$date['goods_id'])->delete();
                 $this->find($date['goods_id'])->update($date);
-                foreach ($goods_images as $image){//插入企业相册图片
-                    AlbumPic::where('apic_cover',$image)->delete();
-                    AlbumPic::create(['apic_name'=>$image,'aclass_id'=>$albumClass->aclass_id,
-                        'apic_cover'=>$image,'upload_time'=>time()]);
+                foreach ($goods_images as $image){
                     //插入商品图片表
                     GoodsImage::create(['goods_id'=>$date['goods_id'],'company_id'=>$date['company_id'],
                         'goods_image'=>$image]);
