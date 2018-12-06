@@ -9,21 +9,18 @@ namespace App\Model;
 
 use Reliese\Database\Eloquent\Model as Eloquent;
 
+
 /**
- * Class 7rAlbumClass
+ * App\Model\AlbumClass
  *
- * @property int $aclass_id
- * @property string $aclass_name
- * @property int $store_id
- * @property int $shop_id
- * @property int $aclass_type
- * @property string $aclass_des
- * @property int $aclass_sort
- * @property string $aclass_cover
- * @property int $upload_time
- * @property bool $is_default
- * @property int $company_id
- * @package App\Models
+ * @property int $aclass_id 相册id
+ * @property string $aclass_name 相册名称
+ * @property string $aclass_des 相册描述
+ * @property int $aclass_sort 排序
+ * @property string $aclass_cover 相册封面
+ * @property int $upload_time 图片上传时间
+ * @property bool $is_default 是否为默认相册,1代表默认
+ * @property int $company_id 企业id
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Model\AlbumClass query()

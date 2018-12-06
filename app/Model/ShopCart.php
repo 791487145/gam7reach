@@ -86,13 +86,13 @@ class ShopCart extends Eloquent
         return $this->hasOne(Member::class)->where('company_id',$company_id);
     }
 
-    static function cartSub($carts,$member)
+    static function cartSub($carts)
     {
-        $param['total'] = 0;
-
+        $total = 0;
         foreach ($carts as $cart){
-            $param['total'] = bcadd($param['total'],bcmul($cart->goods_price,$cart->goods_num,2),2);
+            $param['total'] = bcadd($total,bcmul($cart->goods_price,$cart->goods_num,2),2);
         }
+        return $total;
     }
 
 }

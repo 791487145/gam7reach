@@ -257,7 +257,7 @@ class Order extends Eloquent
     {
         return $this->hasMany(OrderStoreGood::class,'order_id','order_id');
     }
-
+    //支付方式
     public function co_payment()
     {
         return $this->hasOne(CoPayment::class,'id','payment_code');

@@ -172,6 +172,7 @@ class Member extends Authenticatable implements  JWTSubject
         return $this->belongsToMany(CouponTemplate::class,'7r_m_coupon','coupon_owner_id','coupon_t_id')
             ->wherePivot('coupon_t_id',$coupon_t_id)->count();
     }
+
     /*
      * 会员卡卷
      */

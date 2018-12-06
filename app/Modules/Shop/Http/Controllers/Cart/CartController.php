@@ -7,6 +7,9 @@
  */
 namespace  App\Modules\Shop\Http\Controllers\Cart;
 use App\Http\Controllers\ShopBascController;
+use App\Model\CouponShop;
+use App\Model\MAddress;
+use App\Model\MCoupon;
 use App\Model\MemberCenterDecoration;
 use App\Model\ShopCart;
 use App\Model\ShopGood;
@@ -106,6 +109,11 @@ class CartController extends ShopBascController{
         return $this->message('添加成功');
     }
 
+    /**
+     * 查看购物车
+     * @param Request $request
+     * @return mixed
+     */
     public function cardSubmit(Request $request)
     {
         $cart_id = $request->post('cart_id');
@@ -118,11 +126,20 @@ class CartController extends ShopBascController{
                 return $this->failed('参数不正确');
             }
         }
+        $coupon_ids = CouponShop::whereShopId($this->shop_id)->pluck('coupon_t_id');
+        $couples = MCoupon::whereCouponOwnerId($this->member->member_id)->whereIn('coupon_t_id',$coupon_ids)->whereCouponState(MCoupon::COUPON_STATE_NOT_USE)->get();
+        $address = $this->member()->addresses()->where('is_default','1')->first();
+        $total = ShopCart::cartSub($carts);
+        $shop_name = WebShop::whereShopId($this->shop_id)->value('shop_name');
+        //$member_points = $this->member->member_points;
 
-
-        ShopCart::cartSub($carts,$this->member);
-        $shop = WebShop::whereShopId($this->shop_id)->value('shop_name');
-        $member_points = $this->member->member_points;
-
+        $data = array(
+            'couples' => $couples,
+            'address' => $address,
+            'total' => $total,
+            'shop_name' => $shop_name,
+            'couples_num' => count($couples)
+        );
+        return $this->success($data);
     }
 }
