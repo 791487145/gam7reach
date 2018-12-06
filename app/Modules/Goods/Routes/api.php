@@ -36,6 +36,8 @@ Route::prefix('/goods')->group(function(){
     Route::post('add/store','GoodsController@addStoreGoods')->name('addStoreGoods');
     //编辑商品
     Route::match(['get','post'],'edit','GoodsController@editGoods')->name('goodsEdit');
+    //编辑商品详情
+    Route::post('editbody','GoodsController@editBody')->name('goodsBodyEdit');
     //编辑旗舰店商品
     Route::match(['get','post'],'edit/shop','GoodsController@editShopGoods')->name('shopGoodsEdit');
     //编辑云店商品

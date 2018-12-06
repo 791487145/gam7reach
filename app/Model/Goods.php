@@ -197,7 +197,7 @@ class Goods extends Eloquent
                 GoodsImage::where('goods_id',$date['goods_id'])->delete();
                 $this->find($date['goods_id'])->update($date);
                 foreach ($goods_images as $image){//插入企业相册图片
-                    AlbumPic::where('apic_name',$image)->delete();
+                    AlbumPic::where('apic_cover',$image)->delete();
                     AlbumPic::create(['apic_name'=>$image,'aclass_id'=>$albumClass->aclass_id,
                         'apic_cover'=>$image,'upload_time'=>time()]);
                     //插入商品图片表
