@@ -347,6 +347,14 @@ class GoodsController extends BaiscController
                     $item->goods_state=0;
                 });
                 $goods->updateBatch($good_list->toArray());
+
+                $good_list->each(function($item,$key){
+                    //同时将旗舰店、云店商品下架
+                    $item->shopGoods->update(['goods_state'=>0]);
+                    $item->storeGoods->each(function ($item,$key){
+                        $item->update(['goods_state'=>0]);
+                    });
+                });
                 return $this->message('下架成功');
             }
 

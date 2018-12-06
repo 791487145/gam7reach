@@ -33,7 +33,7 @@ class UploadController extends BascController
         if($ret){
             $data=['status'=>'success','code'=>'200','message'=>'删除成功'];
         }
-        return response()->json([$data]);
+        return response()->json($data);
     }
 
     public function download(Request $request)
