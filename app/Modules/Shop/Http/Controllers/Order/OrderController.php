@@ -24,15 +24,7 @@ class OrderController extends ShopBascController{
 
     public function orderCreate(Request $request)
     {
-        /*$a = array('item' =>array(
-            'it' => array(3,4,5),
-            'num' => array(1,2,3)
-        ));
-        dd($a);*/
-        $a = $request->post('item');
-        log::alert(print_r($a,true));
-        dd(1);
-       /* $message=array(
+        $message=array(
             'address_id.required' => '请填写地址id',
             'address_id.exists' => '地址不存在',
             'cart_id.required' => '请填写购物车id'
@@ -93,7 +85,7 @@ class OrderController extends ShopBascController{
             }
         }
 
-        return $orderService->store($this->member, $address, $request->input('order_message'), $request->input('items'), $coupon);*/
+        return $orderService->store($request->user('member'), $address, $request->input('order_message'), $request->input('cart_id'), $coupon,$this->company_id,$this->shop_id);
     }
 
 }

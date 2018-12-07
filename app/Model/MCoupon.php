@@ -7,6 +7,7 @@
 
 namespace App\Model;
 
+use App\Exceptions\CouponCodeUnavailableException;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
@@ -84,6 +85,28 @@ class MCoupon extends Eloquent
 		'coupon_owner_name',
 		'coupon_order_id'
 	];
+
+    public function checkAvailable(Member $user, $orderAmount = null)
+    {
+        if (!$this->enabled) {
+            throw new CouponCodeUnavailableException('优惠券不存在');
+        }
+
+        if ($this->coupon_start_date && strtotime($this->coupon_start_date)->gt(Carbon::now())) {
+            throw new CouponCodeUnavailableException('该优惠券现在还不能使用');
+        }
+
+        if ($this->coupon_end_date && strtotime($this->coupon_end_date)->lt(Carbon::now())) {
+            throw new CouponCodeUnavailableException('该优惠券已过期');
+        }
+        if ($this->coupon_state == self::COUPON_STATE_RECYCLE) {
+            throw new CouponCodeUnavailableException('该优惠券已回收');
+        }
+
+        if (!is_null($orderAmount) && $orderAmount < $this->coupon_limit) {
+            throw new CouponCodeUnavailableException('订单金额不满足该优惠券最低金额');
+        }
+    }
 
 
 }

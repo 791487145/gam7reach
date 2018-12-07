@@ -162,6 +162,11 @@ class Order extends Eloquent
 		'shipping_type'
 	];
 
+    public function order_common()
+    {
+        return $this->hasMany(OrderCommon::class);
+    }
+
     /**
      * 订单列表
      * @param $orders
