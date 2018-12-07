@@ -22,7 +22,7 @@ use Log;
 
 class OrderController extends ShopBascController{
 
-    public function orderCreate(Request $request,OrderService $orderService)
+    public function orderCreate(Request $request)
     {
         /*$a = array('item' =>array(
             'it' => array(3,4,5),
