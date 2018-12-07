@@ -9,6 +9,7 @@ namespace  App\Modules\Shop\Http\Controllers\Member;
 use App\Http\Controllers\ShopBascController;
 use App\Model\MAddress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -39,16 +40,21 @@ class  MemberAddressesController extends ShopBascController{
             'address.required'=>'收货地址不能为空',
             'mob_phone.required'=>'联系人电话不能为空',
             'mob_phone.is_mobile'=>'电话格式不正确',
+            'is_default.unique'=>'已经有默认地址',
         );
         $validator=Validator::make($request->all(),[
             'true_name'=>'required',
             'area_info'=>'required',
             'address'=>'required',
             'mob_phone'=>'required|is_mobile',
+            'is_default'=>$request->input('is_default')?'unique:7r_m_address,is_default,0,is_default,member_id,'.$this->member->member_id:'',
         ],$message);
+
+
         if($validator->fails()){
             return $this->failed($validator->errors()->first());
         }
+
         $data=$request->all();
         $data['member_id']=$this->member->member_id;
         $address=MAddress::create($data);
@@ -81,6 +87,9 @@ class  MemberAddressesController extends ShopBascController{
                 return $this->failed($validator->errors()->first());
             }
             $data=$request->all();
+            if($data['is_default']==1){
+                MAddress::where('member_id',$this->member->member_id)->update(['is_default'=>'0']);
+            }
             if(MAddress::find($data['address_id'])->update($data)){
                 return $this->message('会员地址编辑成功');
             }

@@ -193,7 +193,7 @@ class ShopGood extends Eloquent
         }])->where('shop_goods_id',$shop_goods_id)->select(['shop_goods_id','goods_id','goods_shop_price',
             'goods_promotion_price','goods_promotion_type','goods_click','goods_salenum','goods_spec'
             ,'goods_collect','goods_storage','goods_state','goods_freight','goods_commend','evaluation_count','is_points'])
-            ->first();
+            ->Online()->first();
         return $goods_info;
     }
 }
