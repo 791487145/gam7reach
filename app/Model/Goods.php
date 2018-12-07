@@ -214,4 +214,5 @@ class Goods extends Eloquent
         }
 
     }
+
 }
