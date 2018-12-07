@@ -258,7 +258,35 @@ class Member extends Authenticatable implements  JWTSubject
             'coupon_price'=>$coupon_info->coupon_t_price,
             'coupon_limit'=>$coupon_info->coupon_t_limit,
             'coupon_owner_name'=>$this->member_truename,
+            'coupon_code'=>$this->get_coupon_code($this->member_id),
         );
         $this->coupons()->attach($coupon_info->coupon_t_id,$data);
+        $this->coupons()->decrement('coupon_t_total',1);
+    }
+    /*
+     * 获取优惠券编码
+     */
+    private function get_coupon_code($member_id = 0){
+        static $num = 1;
+        $sign_arr = array();
+        $sign_arr[] = sprintf('%02d',mt_rand(10,99));
+        $sign_arr[] = sprintf('%03d', (float) microtime() * 1000);
+        $sign_arr[] = sprintf('%010d',time() - 946656000);
+        if($member_id){
+            $sign_arr[] = sprintf('%03d', (int) $member_id % 1000);
+        } else {
+            //自增变量
+            $tmpnum = 0;
+            if ($num > 99){
+                $tmpnum = substr($num, -1, 2);
+            } else {
+                $tmpnum = $num;
+            }
+            $sign_arr[] = sprintf('%02d',$tmpnum);
+            $sign_arr[] = mt_rand(1,9);
+        }
+        $code = implode('',$sign_arr);
+        $num += 1;
+        return $code;
     }
 }
