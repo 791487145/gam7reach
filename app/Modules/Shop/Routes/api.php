@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/shop', function (Request $request) {
-    // return $request->shop();
+
 })->middleware('auth:api');
 Route::prefix('shop')->group(function() {
     Route::namespace('Member')->group(function () {

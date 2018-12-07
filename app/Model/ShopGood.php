@@ -68,6 +68,11 @@ class ShopGood extends Eloquent
     const CREATED_AT = 'goods_addtime';
     const UPDATED_AT = 'goods_edittime';
 
+    //good_state
+    const GOOD_STATE_DOWN = 0;
+    const GOOD_STATE_SALE = 1;
+    const GOOD_STATE_SALE_OUT = 2;
+
 	protected $casts = [
 		'goods_addtime' => 'date:Y-m-d',
 		'goods_edittime' => 'datetime:Y-m-d H:i',
@@ -111,9 +116,9 @@ class ShopGood extends Eloquent
 	 */
 	protected function getGoodsState($key){
 	    $state=array(
-	        '0'=>'下架',
-            '1'=>'正常',
-            '2'=>'售罄',
+	        self::GOOD_STATE_DOWN=>'下架',
+            self::GOOD_STATE_SALE=>'正常',
+            self::GOOD_STATE_SALE_OUT=>'售罄',
         );
 	    return $state[$key];
     }
