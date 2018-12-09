@@ -78,7 +78,7 @@ class MemberCenterDecoration extends Eloquent
             $data['moudle_enable']['predeposit']=array('predeposit'=>1,'predeposit_val'=>$member->available_predeposit);
         }
         if($data['moudle_enable']['coupon']){//如果卡卷模块开启
-            $data['moudle_enable']['coupon']=array('coupon'=>1,'coupon_val'=>0);
+            $data['moudle_enable']['coupon']=array('coupon'=>1,'coupon_val'=>$member->coupons->count());
         }
 	    if($this->level_enable){//如果会员等级开启
             $data['level']=$member->grade()->select(['grade_name'])->get();

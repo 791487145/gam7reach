@@ -177,4 +177,28 @@ class ShopGood extends Eloquent
         }
         $this->find($date['shop_goods_id'])->update($date);
     }
+    /*
+     * 商品详情
+     */
+    public function info($shop_goods_id){
+        $goods_info=$this->getGoodsinfo($shop_goods_id);
+        $result=array();
+        $result['goods_info']=$goods_info;
+        if($goods_info){
+            $goods_info->increment('goods_click',1);
+        }
+        return $result;
+    }
+    private function getGoodsinfo($shop_goods_id){
+        //后期加缓存
+        $goods_info=$this->with(['goods'=>function($query){
+            //获取商品图片组
+            $query->with('goods_images')->select(['goods_id','goods_spuno','goods_name',
+                'goods_jingle','goods_marketprice','goods_serial','goods_image','goods_body']);
+        }])->where('shop_goods_id',$shop_goods_id)->select(['shop_goods_id','goods_id','goods_shop_price',
+            'goods_promotion_price','goods_promotion_type','goods_click','goods_salenum','goods_spec'
+            ,'goods_collect','goods_storage','goods_state','goods_freight','goods_commend','evaluation_count','is_points'])
+            ->Online()->first();
+        return $goods_info;
+    }
 }

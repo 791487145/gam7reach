@@ -83,8 +83,9 @@ Route::prefix('shop')->group(function() {
             //商品分组列表
             Route::post('grouplist', 'GoodsController@groupList')->name('shopGrouplist');
             //商品列表
-
-
+            Route::post('list','GoodsController@getGroupGoods')->name('shopGoodsList');
+            //商品详情
+            Route::post('info','GoodsController@info')->name('shopGoodsInfo');
         });
     });
 
