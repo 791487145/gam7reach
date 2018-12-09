@@ -22,7 +22,7 @@ use Log;
 
 class OrderController extends ShopBascController{
 
-    public function orderCreate(Request $request)
+    public function orderCreate(Request $request,OrderService $orderService)
     {
         $message=array(
             'address_id.required' => '请填写地址id',

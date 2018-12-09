@@ -65,7 +65,7 @@ Route::prefix('shop')->group(function() {
 
         Route::prefix('order')->group(function () {
             Route::post('create', 'OrderController@orderCreate')->name('orderCreate');
-            //Route::post('member/address/list','OrderController@orderCreate')->name('orderCreate');
+
         });
     });
     //首页

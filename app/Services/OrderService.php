@@ -3,27 +3,30 @@
 namespace App\Services;
 
 use App\Exceptions\CouponCodeUnavailableException;
+use App\Exceptions\OrderUnavailableException;
 use App\Model\MAddress;
 use App\Model\MCoupon;
 use App\Model\Member;
 use App\Model\Order;
 use App\Model\ShopCart;
+use App\Model\ShopGood;
 use Carbon\Carbon;
 use DB;
 
 class OrderService
 {
-    public function store(Member $member, MAddress $address, $remark, $carts_id, MCoupon $coupon = null)
+    public function store(Member $member, MAddress $address, $remark, $carts_id, MCoupon $coupon = null,$company_id,$shop_id)
     {
         if ($coupon) {
             $coupon->checkAvailable($member);
         }
         // 开启一个数据库事务
-        $order = DB::transaction(function () use ($member, $address, $remark, $carts_id, $coupon) {
+        $order = DB::transaction(function () use ($member, $address, $remark, $carts_id, $coupon,$company_id,$shop_id) {
 
             $order = new Order([
                 'total_amount' => 0,
-                'company_id' =>
+                'order_sn' => Order::findAvailableNo(),
+                'company_id' => $company_id
             ]);
             $order->buyer_id = $member->member_id;
             $order->save();
@@ -32,37 +35,52 @@ class OrderService
             // 遍历用户提交的 SKU
             foreach (explode(',',$carts_id) as $cart_id) {
                 $cart  = ShopCart::find($cart_id);
+                $good = ShopGood::whereGoodsId($cart->goods_id)->whereShopId($cart->shop_id)->first();
                 // 创建一个 OrderItem 并直接与当前订单关联
                 $area_info = json_decode($address->area_info,true);
-                $item = $order->order_amount()->make([
+
+                $order_common = $order->order_common()->make([
                     'order_message' => $remark,
                     'reciver_name'  => $address->true_name,
                     'reciver_info'  => serialize($address),
                     'reciver_address' => json_encode($area_info.$address->address),
                     'order_id' => $order->order_id
                 ]);
-                $item->product()->associate($sku->product_id);
-                $item->productSku()->associate($sku);
-                $item->save();
-                $totalAmount += $sku->price * $data['amount'];
-                if ($sku->decreaseStock($data['amount']) <= 0) {
-                    throw new InvalidRequestException('该商品库存不足');
+                $order_common->save();
+
+                $totalAmount += bcmul($cart->goods_price * $cart->goods_num,2);
+                if ($good->decreaseStock($cart->goods_num) <= 0) {
+                    throw new OrderUnavailableException('该商品库存不足');
                 }
+
+                $order_shop_goods = $order->order_shop_goods()->make([
+                    'order_id' => $order->order_id,
+                    'shop_goods_id' => $good->goods_id,
+                    'goods_name' => $cart->goods_name,
+                    'goods_price' => $cart->goods_price,
+                    'goods_num' => $cart->goods_num,
+                    'goods_image' => $cart->goods_image,
+                    'shop_id' => $shop_id,
+                    'buyer_id' => $member->member_id,
+                    'gc_id' => 0
+                ]);
+                $order_shop_goods->save();
             }
+
+            $order->update(['goods_amount' => $totalAmount]);//商品总价
+
             if ($coupon) {
-                // 总金额已经计算出来了，检查是否符合优惠券规则
+
                 $coupon->checkAvailable($member, $totalAmount);
-                // 把订单金额修改为优惠后的金额
+
                 $totalAmount = $coupon->getAdjustedPrice($totalAmount);
-                // 将订单与优惠券关联
-                $order->couponCode()->associate($coupon);
-                // 增加优惠券的用量，需判断返回值
-                if ($coupon->changeUsed() <= 0) {
-                    throw new CouponCodeUnavailableException('该优惠券已被兑完');
-                }
+
+                $order_common->update(['coupon_code' => $coupon->coupon_code,'coupon_price' => $coupon->coupon_price]);
+                $coupon->update(['coupon_order_id' => $order->order_id]);
+
             }
             // 更新订单总金额
-            $order->update(['total_amount' => $totalAmount]);
+            $order->update(['order_amount' => $totalAmount]);
 
             // 将下单的商品从购物车中移除
             $skuIds = collect($carts_id)->pluck('sku_id')->all();

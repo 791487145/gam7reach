@@ -162,10 +162,6 @@ class Order extends Eloquent
 		'shipping_type'
 	];
 
-    public function order_common()
-    {
-        return $this->hasMany(OrderCommon::class);
-    }
 
     /**
      * 订单列表
@@ -251,7 +247,16 @@ class Order extends Eloquent
         $order->payment_name = $pay_name->payment_name;
         return $order;
     }
-
+    //订单信息扩展
+    public function order_common()
+    {
+        return $this->hasMany(OrderCommon::class);
+    }
+    //订单商品
+    public function order_shop_goods()
+    {
+        return $this->hasMany(OrderShopGood::class);
+    }
     //旗舰店商品
     public function shop_goods()
     {
@@ -266,6 +271,25 @@ class Order extends Eloquent
     public function co_payment()
     {
         return $this->hasOne(CoPayment::class,'id','payment_code');
+    }
+
+    //订单单号
+    static function findAvailableNo()
+    {
+        // 订单流水号前缀
+        $prefix = date('YmdHis');
+        for ($i = 0; $i < 10; $i++) {
+            // 随机生成 6 位的数字
+            $no = $prefix.str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            // 判断是否已经存在
+            if (!static::query()->where('no', $no)->exists()) {
+                return $no;
+            }
+            usleep(100);
+        }
+        \Log::warning(sprintf('find order no failed'));
+
+        return $no;
     }
 
     static function orderDetail($order)

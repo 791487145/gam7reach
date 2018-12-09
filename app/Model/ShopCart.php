@@ -7,6 +7,7 @@
 
 namespace App\Model;
 
+use App\Exceptions\OrderUnavailableException;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 
@@ -85,6 +86,7 @@ class ShopCart extends Eloquent
     {
         return $this->hasOne(Member::class)->where('company_id',$company_id);
     }
+
 
     static function cartSub($carts)
     {

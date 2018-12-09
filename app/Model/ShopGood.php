@@ -7,6 +7,7 @@
 
 namespace App\Model;
 
+use App\Exceptions\OrderUnavailableException;
 use App\Http\Controllers\BaiscController;
 use Illuminate\Support\Facades\DB;
 use Reliese\Database\Eloquent\Model as Eloquent;
@@ -188,6 +189,15 @@ class ShopGood extends Eloquent
             $goods_info->increment('goods_click',1);
         }
         return $result;
+    }
+    //查看库存是否足够
+    public function decreaseStock($amount)
+    {
+        if ($amount < 0) {
+            throw new OrderUnavailableException('减库存不可小于0');
+        }
+
+        return $this->newQuery()->where('shop_goods_id', $this->id)->where('goods_storage', '>=', $amount)->decrement('goods_storage', $amount);
     }
     private function getGoodsinfo($shop_goods_id){
         //后期加缓存

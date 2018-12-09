@@ -8,6 +8,7 @@
 namespace App\Model;
 
 use App\Exceptions\CouponCodeUnavailableException;
+use Carbon\Carbon;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
@@ -86,6 +87,7 @@ class MCoupon extends Eloquent
 		'coupon_order_id'
 	];
 
+	//效验是否可以使用
     public function checkAvailable(Member $user, $orderAmount = null)
     {
         if (!$this->enabled) {
@@ -106,6 +108,17 @@ class MCoupon extends Eloquent
         if (!is_null($orderAmount) && $orderAmount < $this->coupon_limit) {
             throw new CouponCodeUnavailableException('订单金额不满足该优惠券最低金额');
         }
+    }
+    //订单金额与优惠券
+    public function getAdjustedPrice($orderAmount)
+    {
+        // 固定金额
+        if ($this->coupon_price > 0) {
+            // 为了保证系统健壮性，我们需要订单金额最少为 0.01 元
+            return max(0.01, bcsub($orderAmount,$this->coupon_price,2));
+        }
+
+        //return number_format($orderAmount * (100 - $this->value) / 100, 2, '.', '');
     }
 
 
