@@ -87,5 +87,13 @@ class OrderController extends ShopBascController{
 
         return $orderService->store($request->user('member'), $address, $request->input('order_message'), $request->input('cart_id'), $coupon,$this->company_id,$this->shop_id);
     }
-
+    /*
+     * 订单详情
+     */
+    public function orderDetail(Request $request){
+        $order_id=$request->input('order_id');
+        if(!$order_id){
+            return $this->failed('订单id不能为空');
+        }
+    }
 }
