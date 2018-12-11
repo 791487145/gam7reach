@@ -10,6 +10,7 @@ use App\Http\Controllers\ShopBascController;
 use App\Model\CouponShop;
 use App\Model\MAddress;
 use App\Model\MCoupon;
+use App\Model\Order;
 use App\Model\ShopCart;
 use App\Model\ShopGood;
 use App\Model\WebShop;
@@ -90,10 +91,20 @@ class OrderController extends ShopBascController{
     /*
      * 订单详情
      */
-    public function orderDetail(Request $request){
+    public function orderDetail(Request $request,Order $order){
         $order_id=$request->input('order_id');
         if(!$order_id){
             return $this->failed('订单id不能为空');
         }
+        $order_info=$order->with(['shop_goods'=>function($query){
+            $query->select(['order_id','shop_goods_id','goods_name','goods_price','goods_num','goods_image','goods_pay_price','goods_type','promotions_id']);
+        }])->find($order_id);
+        if(empty($order_info)){
+            return $this->failed('无效数据');
+        }
+        $order_info = Order::orderCN($order_info);
+        $data=$order->orderDetail($order_info);
+
+        return $this->success($data);
     }
 }

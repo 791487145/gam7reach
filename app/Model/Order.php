@@ -115,20 +115,20 @@ class Order extends Eloquent
 		'shop_id' => 'int',
 		'store_id' => 'int',
 		'buyer_id' => 'int',
-		'add_time' => 'int',
+		'add_time' => 'datetime:Y-m-d H:i',
 		'payment_code' => 'int',
 		'payment_time' => 'int',
-		'finnshed_time' => 'int',
-		'goods_amount' => 'float',
-		'order_amount' => 'float',
-		'pd_amount' => 'float',
+		'finnshed_time' => 'datetime:Y-m-d H:i',
+		'goods_amount' => 'float(10,2)',
+		'order_amount' => 'float(10,2)',
+		'pd_amount' => 'float(10.2)',
 		'shipping_fee' => 'float',
 		'evaluation_state' => 'int',
 		'order_state' => 'int',
 		'refund_state' => 'bool',
 		'lock_state' => 'bool',
-		'refund_amount' => 'float',
-		'delay_time' => 'int',
+		'refund_amount' => 'float(10,2)',
+		'delay_time' => 'datetime:Y-m-d H:i',
 		'shipping_type' => 'int'
 	];
 
@@ -309,7 +309,10 @@ class Order extends Eloquent
 
         $order_comment = OrderCommon::whereOrderId($order->order_id)->first();
         $order->order_message = $order_comment->order_message;//留言
-
+        $order->coupon='';
+        if($order_comment->coupon_code&&$order_comment->coupon_price){//如果订单使用了优惠卷
+            $order->coupon=array('coupon_price'=>$order_comment->coupon_price);
+        }
         if($order->order_type == self::ORDER_TYPE_PUB){
             $order->order_type_name = '配送';
 
