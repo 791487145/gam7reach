@@ -124,4 +124,17 @@ class OrderController extends ShopBascController{
         }
         return $this->failed('取消订单失败');
     }
+    /*
+     * 收货
+     */
+    public function received(Request $request){
+        $order=Order::find($request->input('order_id',0));
+        if(!$order){
+            return $this->failed('无效数据');
+        }
+        if($order->received()){
+            return $this->message('收货成功');
+        }
+        return $this->failed('收货失败');
+    }
 }

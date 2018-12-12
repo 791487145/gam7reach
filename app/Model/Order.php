@@ -9,6 +9,7 @@ namespace App\Model;
 
 use Illuminate\Support\Facades\DB;
 use Reliese\Database\Eloquent\Model as Eloquent;
+use think\Exception;
 
 /**
  * App\Model\Order
@@ -343,7 +344,6 @@ class Order extends Eloquent
 	    try{
             if($this->update(['order_state'=>self::ORDER_STATUS_CANCEL])){
                 if($this->order_flag){//云店商品
-
                 }else{//旗舰店商品
                     foreach ($this->shop_goods as $item){
                         //将商品库存还回去
@@ -356,7 +356,6 @@ class Order extends Eloquent
                                         $mcoupon->coupon_info()->decrement('coupon_t_used',1);
                                         DB::commit();
                                         return true;
-
                                     }
                                 }
 
@@ -366,12 +365,45 @@ class Order extends Eloquent
                     throw new \Exception('关闭错误');
                 }
             }
-
         }catch (\Exception $e){
 	        DB::rollBack();
 	        return false;
         }
 
+    }
+    /*
+     * 订单收货
+     * param $scene场景 1用户 2后台管理
+     */
+    public function received($scene=1){
+
+        if($this->order_state!=self::ORDER_STATUS_SEND){
+            return;
+        }
+
+        $user_info=array('log_user'=>$this->buyer_name,'log_role'=>0);
+        if($scene==2){//后台操作
+            $user_info['log_user']='';
+            $user_info['log_role']=0;
+        }
+        DB::beginTransaction();
+        try{
+            if($this->update(['order_state'=>self::ORDER_STATUS_RECEIVE,'finnshed_time'=>time()])){
+
+                $msg='订单收货';
+                if(OrderLog::create(['order_id'=>$this->order_id,'log_msg'=>$msg,'log_time'=>time()
+                    ,'log_user'=>$user_info['log_user'],'log_role'=>$user_info['log_role'],'log_orderstate'=>self::ORDER_STATUS_RECEIVE])){
+                    DB::commit();
+                    return true;
+                }
+
+            }
+            throw new \Exception('收货错误');
+
+        }catch (\Exception $e){
+            DB::rollBack();
+            return false;
+        }
 
     }
 }
