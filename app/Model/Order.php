@@ -7,6 +7,7 @@
 
 namespace App\Model;
 
+use Illuminate\Support\Facades\DB;
 use Reliese\Database\Eloquent\Model as Eloquent;
 
 /**
@@ -161,7 +162,7 @@ class Order extends Eloquent
 		'shipping_code',
 		'shipping_type'
 	];
-
+    protected $dates = ['delete_at'];
 
     /**
      * 订单列表
@@ -253,7 +254,7 @@ class Order extends Eloquent
     //订单信息扩展
     public function order_common()
     {
-        return $this->hasMany(OrderCommon::class);
+        return $this->hasOne(OrderCommon::class,'order_id','order_id');
     }
     //订单商品
     public function order_shop_goods()
@@ -328,5 +329,49 @@ class Order extends Eloquent
         }
 
         return $order;
+    }
+    /*
+     * 关闭订单
+     */
+    public function closeOrder(){
+        //判断订单是否是未付款
+	    if($this->order_state!=self::ORDER_STATUS_NOT_PAY){
+	        return;
+        }
+
+        DB::beginTransaction();
+	    try{
+            if($this->update(['order_state'=>self::ORDER_STATUS_CANCEL])){
+                if($this->order_flag){//云店商品
+
+                }else{//旗舰店商品
+                    foreach ($this->shop_goods as $item){
+                        //将商品库存还回去
+                        if(ShopGood::find($item->shop_goods_id)->increment('goods_storage',1)){
+                            //如果使用了优惠券将优惠卷还回去
+                            if($this->order_common->coupon_code){
+                                $mcoupon=MCoupon::where('coupon_code',$this->order_common->coupon_code)->first();
+                                if($mcoupon){
+                                    if($mcoupon->update(['coupon_state'=>1])){
+                                        $mcoupon->coupon_info()->decrement('coupon_t_used',1);
+                                        DB::commit();
+                                        return true;
+
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                    throw new \Exception('关闭错误');
+                }
+            }
+
+        }catch (\Exception $e){
+	        DB::rollBack();
+	        return false;
+        }
+
+
     }
 }

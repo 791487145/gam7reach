@@ -67,6 +67,8 @@ Route::prefix('shop')->group(function() {
             Route::post('create', 'OrderController@orderCreate')->name('orderCreate');
             //订单详情
             Route::post('info','OrderController@orderDetail')->name('orderDetail');
+            //取消订单
+            Route::post('close','OrderController@orderClose')->name('orderClose');
         });
     });
     //首页

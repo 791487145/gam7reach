@@ -107,4 +107,21 @@ class OrderController extends ShopBascController{
 
         return $this->success($data);
     }
+    /*
+     * 取消订单
+     */
+    public function orderClose(Request $request){
+        $order_id=$request->input('order_id');
+        if(!$order_id){
+            return $this->failed('订单id不能为空');
+        }
+        $order=Order::find($order_id);
+        if(!$order){
+            return $this->failed('无效数据');
+        }
+        if($order->closeOrder()){
+            return $this->message('取消订单成功');
+        }
+        return $this->failed('取消订单失败');
+    }
 }
