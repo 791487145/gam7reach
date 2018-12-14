@@ -36,6 +36,7 @@ class Controller extends BaseController
             }
         }catch (\Exception $e){
             Log::channel('webhook')->error($e->getMessage());
+            return response()->json(['status'=>'error','code'=>'400']);
         }
 
     }
