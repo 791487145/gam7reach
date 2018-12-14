@@ -25,6 +25,7 @@ Route::prefix('shop')->group(function() {
             //会员登录
             Route::post('login', 'LoginController@login')->name('shopLogin');
             //小程序登录
+            
             //会员中心
             Route::post('home', 'MemberController@home')->name('memberHome');
             //会员我的订单
