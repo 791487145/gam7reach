@@ -28,13 +28,14 @@ class Controller extends BaseController
             //计算签名
             $payloadHash = hash_hmac($algo, $json, $secret);
             if ($hash === $payloadHash) {
+
                 $cmd = "cd $target && git pull origin master";
-                if($res = shell_exec($cmd)){
-                    $res_log=$content['head_commit']['author']['name'] . ' 在' . date('Y-m-d H:i:s') . '向' . $content['repository']['name'] . '项目的' . $content['ref'] . '分支push了' . count($content['commits']) . '个commit：';
-                    Log::channel('webhook')->info($res_log);
-                    return response()->json(['status'=>'ok','code'=>'200']);
-                }
-                throw new \Exception('执行错误');
+                $res = shell_exec($cmd);
+                $res_log=$content['head_commit']['author']['name'] . ' 在' . date('Y-m-d H:i:s') . '向' . $content['repository']['name'] . '项目的' . $content['ref'] . '分支push了' . count($content['commits']) . '个commit：';
+                Log::channel('webhook')->info($res_log);
+                return response()->json(['status'=>'ok','code'=>'200']);
+
+
             }
         }catch (\Exception $e){
             Log::channel('webhook')->error($e->getMessage());
