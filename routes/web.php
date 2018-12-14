@@ -14,7 +14,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+//log
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('decompose','\Lubusin\Decomposer\Controllers\DecomposerController@index');
 //github webhook api
