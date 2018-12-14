@@ -32,14 +32,14 @@ class Controller extends BaseController
 
                 $cmd = "cd $target && git pull origin master";
                 exec($cmd,$output);
-                $res_log=$content['head_commit']['author']['name'] . ' 在' . date('Y-m-d H:i:s') . '向' . $content['repository']['name'] . '项目的' . $content['ref'] . '分支push了' . count($content['commits']) . '个commit：result:'.$output;
+                $res_log=$content['head_commit']['author']['name'] . ' 在' . date('Y-m-d H:i:s') . '向' . $content['repository']['name'] . '项目的' . $content['ref'] . '分支push了' . count($content['commits']) . '个commit：result:'.print_r($output);
                 Log::channel('webhook')->info($res_log);
                 return response()->json(['status'=>'ok','code'=>'200']);
 
 
             }
         }catch (\Exception $e){
-            Log::channel('webhook')->error($e->getMessage());
+            Log::channel('webhook')->error($e->getLine()."--".$e->getMessage());
             return response()->json(['status'=>'error','code'=>'400']);
         }
 
