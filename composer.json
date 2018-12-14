@@ -17,6 +17,7 @@
         "lubusin/laravel-decomposer": "^1.2",
         "maatwebsite/excel": "3.1",
         "overtrue/easy-sms": "^1.1",
+        "overtrue/laravel-wechat": "~4.0",
         "predis/predis": "^1.1",
         "rap2hpoutre/laravel-log-viewer": "^0.22.1",
         "reliese/laravel": "^0.0.13",
