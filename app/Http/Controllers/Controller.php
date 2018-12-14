@@ -16,8 +16,8 @@ class Controller extends BaseController
 
         $target=base_path();
         $secret='123456';
-        $wwwUser='www';
-        $wwwGroup='www';
+        $wwwUser='root';
+        $wwwGroup='root';
         try{
             //获取GitHub发送的内容
             $json = file_get_contents('php://input');
