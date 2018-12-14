@@ -58,7 +58,12 @@ return [
             'emoji' => ':boom:',
             'level' => 'critical',
         ],
-
+        'webhook'=>[
+            'driver' => 'daily',
+            'path' => storage_path('logs/webhook.log'),
+            'level' => 'debug',
+            'days' => 7,
+        ],
         'stderr' => [
             'driver' => 'monolog',
             'handler' => StreamHandler::class,

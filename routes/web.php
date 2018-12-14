@@ -17,3 +17,5 @@ Route::get('/', function () {
 
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 Route::get('decompose','\Lubusin\Decomposer\Controllers\DecomposerController@index');
+//github webhook
+Route::match(['get','post'],'/webhook','Controller@webHook');
