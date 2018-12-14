@@ -18,6 +18,7 @@ class Controller extends BaseController
         $secret='123456';
         $wwwUser='www';
         $wwwGroup='www';
+        $output='';
         try{
             //获取GitHub发送的内容
             $json = file_get_contents('php://input');
@@ -30,8 +31,8 @@ class Controller extends BaseController
             if ($hash === $payloadHash) {
 
                 $cmd = "cd $target && git pull origin master";
-                $res = shell_exec($cmd);
-                $res_log=$content['head_commit']['author']['name'] . ' 在' . date('Y-m-d H:i:s') . '向' . $content['repository']['name'] . '项目的' . $content['ref'] . '分支push了' . count($content['commits']) . '个commit：';
+                exec($cmd,$output);
+                $res_log=$content['head_commit']['author']['name'] . ' 在' . date('Y-m-d H:i:s') . '向' . $content['repository']['name'] . '项目的' . $content['ref'] . '分支push了' . count($content['commits']) . '个commit：result:'.$output;
                 Log::channel('webhook')->info($res_log);
                 return response()->json(['status'=>'ok','code'=>'200']);
 
